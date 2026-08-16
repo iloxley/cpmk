@@ -27,6 +27,25 @@ export function formatDoctorHuman(result: DoctorResult): string {
   return `CPMK doctor: fail\n${lines.join('\n')}\n`;
 }
 
+export function formatShowHuman(entry: MemoryEntry): string {
+  const tags = entry.tags.length === 0 ? '' : entry.tags.join(', ');
+  return `ID: ${entry.id}
+Type: ${entry.type}
+Status: ${entry.status}
+Source: ${entry.source}
+Created: ${entry.createdAt}
+Updated: ${entry.updatedAt}
+Tags: ${tags}
+
+${entry.title}
+${entry.content}
+`;
+}
+
+export function formatShowJson(entry: MemoryEntry): string {
+  return `${JSON.stringify(entry)}\n`;
+}
+
 export function formatDoctorJson(result: DoctorResult): string {
   return `${JSON.stringify({
     ok: result.ok,

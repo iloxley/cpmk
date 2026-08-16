@@ -12,6 +12,8 @@ describe('helpText', () => {
     expect(helpText('list')).toContain('cpmk list');
     expect(helpText('context')).toContain('cpmk context');
     expect(helpText('doctor')).toContain('cpmk doctor');
+    expect(helpText('show')).toContain('cpmk show');
+    expect(helpText('migrate')).toContain('cpmk migrate');
   });
 });
 
@@ -34,7 +36,20 @@ describe('command help', () => {
       stderr: () => undefined,
       cwd: () => process.cwd(),
     };
-    for (const command of ['init', 'remember', 'list', 'context', 'doctor']) {
+    for (const command of [
+      'init',
+      'remember',
+      'list',
+      'show',
+      'edit',
+      'archive',
+      'supersede',
+      'import',
+      'export',
+      'context',
+      'doctor',
+      'migrate',
+    ]) {
       expect(await run([command, '--help'], io)).toBe(0);
     }
     expect(await run(['help', 'init'], io)).toBe(0);

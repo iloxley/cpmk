@@ -78,6 +78,28 @@ describe('packaged CLI', () => {
         ok: boolean;
       };
       expect(payload.ok).toBe(true);
+
+      const id = remember.stdout.trim();
+      const shown = await runPackagedCli(['show', id, '--json'], directory);
+      expect(shown.status).toBe(0);
+      expect(JSON.parse(shown.stdout)).toMatchObject({
+        id,
+        type: 'convention',
+      });
+
+      const archived = await runPackagedCli(['archive', id], directory);
+      expect(archived.status).toBe(0);
+
+      const exported = await runPackagedCli(['export'], directory);
+      expect(exported.status).toBe(0);
+      expect(Array.isArray(JSON.parse(exported.stdout) as unknown)).toBe(true);
+
+      const migrated = await runPackagedCli(
+        ['migrate', '--dry-run'],
+        directory,
+      );
+      expect(migrated.status).toBe(0);
+      expect(migrated.stdout).toContain('schema 1 -> 1');
     });
   });
 

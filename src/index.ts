@@ -1,8 +1,15 @@
+export { archiveEntry } from './application/archive.js';
 export { buildContext } from './application/context.js';
 export { diagnoseProject } from './application/doctor.js';
+export { editEntry } from './application/edit.js';
+export { exportMemory } from './application/export-memory.js';
+export { importMemory } from './application/import-memory.js';
 export { initProject } from './application/init.js';
 export { listMemory } from './application/list.js';
+export { migrateProject } from './application/migrate.js';
 export { rememberEntry } from './application/remember.js';
+export { showEntry } from './application/show.js';
+export { supersedeEntry } from './application/supersede.js';
 export { CpmkError } from './domain/errors.js';
 export { renderContext } from './domain/render.js';
 export { selectEntries } from './domain/selection.js';

@@ -22,7 +22,37 @@ export type ParsedCli =
       json: boolean;
     }
   | { kind: 'context'; root?: string; budget?: number; output?: string }
-  | { kind: 'doctor'; root?: string; json: boolean };
+  | { kind: 'doctor'; root?: string; json: boolean }
+  | { kind: 'show'; root?: string; id: string; json: boolean }
+  | {
+      kind: 'edit';
+      root?: string;
+      id: string;
+      title?: string;
+      content?: string;
+      type?: string;
+      tags?: string[];
+    }
+  | { kind: 'archive'; root?: string; id: string }
+  | {
+      kind: 'supersede';
+      root?: string;
+      id: string;
+      content: string;
+      title?: string;
+      type?: string;
+      tags: string[];
+    }
+  | { kind: 'import'; root?: string; sourcePath: string }
+  | {
+      kind: 'export';
+      root?: string;
+      output?: string;
+      status?: string;
+      type?: string;
+      tag?: string;
+    }
+  | { kind: 'migrate'; root?: string; to?: number; dryRun: boolean };
 
 const COMMANDS = new Set([
   'init',
@@ -30,6 +60,13 @@ const COMMANDS = new Set([
   'list',
   'context',
   'doctor',
+  'show',
+  'edit',
+  'archive',
+  'supersede',
+  'import',
+  'export',
+  'migrate',
   'help',
 ]);
 
@@ -73,6 +110,9 @@ function parseCommandArgs(command: string, args: string[]) {
         json: { type: 'boolean' },
         budget: { type: 'string' },
         output: { type: 'string', short: 'o' },
+        content: { type: 'string' },
+        to: { type: 'string' },
+        'dry-run': { type: 'boolean' },
       },
     });
   } catch (error) {
@@ -194,6 +234,115 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         json: parsed.values.json === true,
         ...optionalRoot(root),
       };
+    case 'show': {
+      const id = parsed.positionals[0];
+      if (id === undefined || parsed.positionals.length !== 1) {
+        throw usageError('show requires a single <id> argument');
+      }
+      return {
+        kind: 'show',
+        id,
+        json: parsed.values.json === true,
+        ...optionalRoot(root),
+      };
+    }
+    case 'edit': {
+      const id = parsed.positionals[0];
+      if (id === undefined || parsed.positionals.length !== 1) {
+        throw usageError('edit requires a single <id> argument');
+      }
+      const title = optionalString(parsed.values.title, '--title');
+      const content = optionalString(parsed.values.content, '--content');
+      const type = optionalString(parsed.values.type, '--type');
+      const tags = parsed.values.tag;
+      return {
+        kind: 'edit',
+        id,
+        ...optionalRoot(root),
+        ...(title === undefined ? {} : { title }),
+        ...(content === undefined ? {} : { content }),
+        ...(type === undefined ? {} : { type }),
+        ...(tags === undefined ? {} : { tags }),
+      };
+    }
+    case 'archive': {
+      const id = parsed.positionals[0];
+      if (id === undefined || parsed.positionals.length !== 1) {
+        throw usageError('archive requires a single <id> argument');
+      }
+      return { kind: 'archive', id, ...optionalRoot(root) };
+    }
+    case 'supersede': {
+      const id = parsed.positionals[0];
+      const content = parsed.positionals[1];
+      if (
+        id === undefined ||
+        content === undefined ||
+        parsed.positionals.length !== 2
+      ) {
+        throw usageError('supersede requires <id> and <content>');
+      }
+      const title = optionalString(parsed.values.title, '--title');
+      const type = optionalString(parsed.values.type, '--type');
+      return {
+        kind: 'supersede',
+        id,
+        content,
+        tags: parsed.values.tag ?? [],
+        ...optionalRoot(root),
+        ...(title === undefined ? {} : { title }),
+        ...(type === undefined ? {} : { type }),
+      };
+    }
+    case 'import': {
+      const sourcePath = parsed.positionals[0];
+      if (sourcePath === undefined || parsed.positionals.length !== 1) {
+        throw usageError('import requires a single <path> argument');
+      }
+      return { kind: 'import', sourcePath, ...optionalRoot(root) };
+    }
+    case 'export': {
+      if (parsed.positionals.length > 0) {
+        throw usageError('export does not take positional arguments');
+      }
+      const output = optionalString(parsed.values.output, '--output');
+      const status = optionalString(parsed.values.status, '--status');
+      const type = optionalString(parsed.values.type, '--type');
+      const tags = parsed.values.tag ?? [];
+      if (tags.length > 1) {
+        throw usageError('export accepts a single --tag filter');
+      }
+      const tag = optionalString(tags[0], '--tag');
+      return {
+        kind: 'export',
+        ...optionalRoot(root),
+        ...(output === undefined ? {} : { output }),
+        ...(status === undefined ? {} : { status }),
+        ...(type === undefined ? {} : { type }),
+        ...(tag === undefined ? {} : { tag }),
+      };
+    }
+    case 'migrate': {
+      if (parsed.positionals.length > 0) {
+        throw usageError('migrate does not take positional arguments');
+      }
+      const toValue = parsed.values.to;
+      const to =
+        toValue === undefined
+          ? undefined
+          : /^[0-9]+$/u.test(toValue)
+            ? Number.parseInt(toValue, 10)
+            : undefined;
+      if (toValue !== undefined && to === undefined) {
+        throw usageError('--to must be an integer schema version');
+      }
+      return {
+        kind: 'migrate',
+        dryRun: parsed.values['dry-run'] === true,
+        ...optionalRoot(root),
+        ...(to === undefined ? {} : { to }),
+      };
+    }
     default:
       throw usageError(`unknown command ${first}; see cpmk --help`);
   }

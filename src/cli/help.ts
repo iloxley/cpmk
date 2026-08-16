@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.1.0';
+export const VERSION_SOURCE = '0.2.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -30,6 +30,41 @@ Writes to stdout unless --output is supplied.
 
 Validate configuration, layout, filenames, schemas, duplicate IDs, and timestamps.
 `;
+    case 'show':
+      return `Usage: cpmk show <id> [--json]
+
+Print one memory entry, including source, status, and timestamps.
+`;
+    case 'edit':
+      return `Usage: cpmk edit <id> [--title <title>] [--content <content>] [--type <type>] [--tag <tag>...]
+
+Update fields on an existing entry and bump updatedAt.
+`;
+    case 'archive':
+      return `Usage: cpmk archive <id>
+
+Set an entry status to archived.
+`;
+    case 'supersede':
+      return `Usage: cpmk supersede <id> <content> [--title <title>] [--type <type>] [--tag <tag>...]
+
+Mark an active entry superseded and create a replacement entry.
+`;
+    case 'import':
+      return `Usage: cpmk import <path>
+
+Import entries from a JSON file. Paths matching privacy.denyGlobs are rejected.
+`;
+    case 'export':
+      return `Usage: cpmk export [--output <path>] [--type <type>] [--tag <tag>] [--status <status>]
+
+Write matching entries as a JSON array to stdout or a project file.
+`;
+    case 'migrate':
+      return `Usage: cpmk migrate [--to <version>] [--dry-run]
+
+Create a backup and confirm schema compatibility. Schema 1 is the only target in this release.
+`;
     default:
       return `CPMK — Cursor Project Memory Kit
 
@@ -40,8 +75,15 @@ Commands:
   init        Create local CPMK project state
   remember    Store a memory entry
   list        List memory entries
+  show        Show one memory entry
+  edit        Edit an existing entry
+  archive     Archive an entry
+  supersede   Replace an active entry
+  import      Import entries from a JSON file
+  export      Export entries as JSON
   context     Assemble a bounded Markdown context document
   doctor      Validate project state
+  migrate     Backup project state and check schema version
 
 Global options:
   --root <path>   Project directory (default: current working directory)

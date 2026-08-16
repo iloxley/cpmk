@@ -1,9 +1,16 @@
 import path from 'node:path';
+import { archiveEntry } from '../application/archive.js';
 import { buildContext } from '../application/context.js';
 import { diagnoseProject } from '../application/doctor.js';
+import { editEntry } from '../application/edit.js';
+import { exportMemory } from '../application/export-memory.js';
+import { importMemory } from '../application/import-memory.js';
 import { initProject } from '../application/init.js';
 import { listMemory } from '../application/list.js';
+import { migrateProject } from '../application/migrate.js';
 import { rememberEntry } from '../application/remember.js';
+import { showEntry } from '../application/show.js';
+import { supersedeEntry } from '../application/supersede.js';
 import { CpmkError } from '../domain/errors.js';
 import { discoverRoot, resolveExistingDirectory } from '../storage/root.js';
 import { parseCli } from './args.js';
@@ -12,6 +19,8 @@ import {
   formatDoctorJson,
   formatListHuman,
   formatListJson,
+  formatShowHuman,
+  formatShowJson,
 } from './format.js';
 import { helpText, VERSION_SOURCE } from './help.js';
 
@@ -133,6 +142,83 @@ export async function run(
           parsed.json ? formatDoctorJson(result) : formatDoctorHuman(result),
         );
         return result.ok ? 0 : 1;
+      }
+      case 'show': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await showEntry({ projectRoot: root, id: parsed.id });
+        io.stdout(parsed.json ? formatShowJson(entry) : formatShowHuman(entry));
+        return 0;
+      }
+      case 'edit': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await editEntry({
+          projectRoot: root,
+          id: parsed.id,
+          ...(parsed.title === undefined ? {} : { title: parsed.title }),
+          ...(parsed.content === undefined ? {} : { content: parsed.content }),
+          ...(parsed.type === undefined ? {} : { type: parsed.type }),
+          ...(parsed.tags === undefined ? {} : { tags: parsed.tags }),
+        });
+        io.stdout(`${entry.id}\n`);
+        return 0;
+      }
+      case 'archive': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await archiveEntry({ projectRoot: root, id: parsed.id });
+        io.stdout(`${entry.id}\n`);
+        return 0;
+      }
+      case 'supersede': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const result = await supersedeEntry({
+          projectRoot: root,
+          id: parsed.id,
+          content: parsed.content,
+          ...(parsed.title === undefined ? {} : { title: parsed.title }),
+          ...(parsed.type === undefined ? {} : { type: parsed.type }),
+          tags: parsed.tags,
+        });
+        io.stdout(`${result.next.id}\n`);
+        return 0;
+      }
+      case 'import': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entries = await importMemory({
+          projectRoot: root,
+          sourcePath: path.resolve(io.cwd(), parsed.sourcePath),
+        });
+        io.stdout(`${entries.map((entry) => entry.id).join('\n')}\n`);
+        return 0;
+      }
+      case 'export': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const result = await exportMemory({
+          projectRoot: root,
+          ...(parsed.output === undefined
+            ? {}
+            : { output: path.resolve(io.cwd(), parsed.output) }),
+          ...(parsed.status === undefined ? {} : { status: parsed.status }),
+          ...(parsed.type === undefined ? {} : { type: parsed.type }),
+          ...(parsed.tag === undefined ? {} : { tag: parsed.tag }),
+        });
+        if (result.writtenTo === undefined) {
+          io.stdout(`${JSON.stringify(result.entries)}\n`);
+        }
+        return 0;
+      }
+      case 'migrate': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const result = await migrateProject({
+          projectRoot: root,
+          dryRun: parsed.dryRun,
+          ...(parsed.to === undefined ? {} : { to: parsed.to }),
+        });
+        const backup =
+          result.backupDir === undefined ? 'none' : result.backupDir;
+        io.stdout(
+          `schema ${result.from} -> ${result.to}; entries ${result.entryCount}; backup ${backup}; dryRun ${result.dryRun}\n`,
+        );
+        return 0;
       }
     }
   } catch (error) {
