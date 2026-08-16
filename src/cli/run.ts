@@ -1,4 +1,7 @@
 import path from 'node:path';
+import { createHandoff } from '../application/handoff.js';
+import { installHooks, uninstallHooks } from '../application/hook.js';
+import { readProjectStatus } from '../application/status.js';
 import { archiveEntry } from '../application/archive.js';
 import { buildContext } from '../application/context.js';
 import { diagnoseProject } from '../application/doctor.js';
@@ -133,6 +136,10 @@ export async function run(
         if (result.writtenTo === undefined) {
           io.stdout(result.markdown);
         }
+        const status = readProjectStatus(root);
+        if (status.git?.dirty === true) {
+          io.stderr(`warning: Git worktree is dirty on ${status.git.branch}\n`);
+        }
         return 0;
       }
       case 'doctor': {
@@ -218,6 +225,42 @@ export async function run(
         io.stdout(
           `schema ${result.from} -> ${result.to}; entries ${result.entryCount}; backup ${backup}; dryRun ${result.dryRun}\n`,
         );
+        return 0;
+      }
+      case 'status': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const status = readProjectStatus(root);
+        if (status.git === undefined) {
+          io.stdout(`Root: ${status.projectRoot}\nGit: unavailable\n`);
+        } else {
+          io.stdout(
+            `Root: ${status.projectRoot}\nBranch: ${status.git.branch}\nCommit: ${status.git.commit}\nDirty: ${status.git.dirty ? 'yes' : 'no'}\n`,
+          );
+        }
+        return 0;
+      }
+      case 'handoff': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await createHandoff({
+          projectRoot: root,
+          ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
+        });
+        io.stdout(`${entry.id}\n`);
+        return 0;
+      }
+      case 'hook': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        if (parsed.action === 'install') {
+          const written = await installHooks(root);
+          io.stdout(`${written.join('\n')}\n`);
+        } else {
+          const removed = await uninstallHooks(root);
+          io.stdout(
+            removed.length === 0
+              ? 'no cpmk hooks removed\n'
+              : `${removed.join('\n')}\n`,
+          );
+        }
         return 0;
       }
     }

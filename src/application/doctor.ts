@@ -16,6 +16,7 @@ import {
   memoryDir,
 } from '../storage/paths.js';
 import { assertSafeProjectLayout } from '../storage/root.js';
+import { readGitSnapshot } from '../git/status.js';
 
 const SKIP_MEMORY_FILES = new Set(['.gitkeep']);
 
@@ -26,6 +27,15 @@ function addError(
   message: string,
 ): void {
   diagnostics.push({ severity: 'error', code, path: filePath, message });
+}
+
+function addWarning(
+  diagnostics: Diagnostic[],
+  code: string,
+  filePath: string,
+  message: string,
+): void {
+  diagnostics.push({ severity: 'warning', code, path: filePath, message });
 }
 
 export async function diagnoseProject(options: {
@@ -170,8 +180,18 @@ export async function diagnoseProject(options: {
     }
   }
 
+  const git = readGitSnapshot(root);
+  if (git?.dirty === true) {
+    addWarning(
+      diagnostics,
+      'DIRTY_TREE',
+      '.',
+      `Git worktree is dirty on ${git.branch}; commit or stash before a handoff`,
+    );
+  }
+
   return {
-    ok: diagnostics.length === 0,
+    ok: !diagnostics.some((item) => item.severity === 'error'),
     data: {
       root,
       entryCount,

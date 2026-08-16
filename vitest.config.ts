@@ -9,6 +9,7 @@ export default defineConfig({
         'src/domain/**/*.ts',
         'src/storage/**/*.ts',
         'src/application/**/*.ts',
+        'src/git/**/*.ts',
       ],
       reporter: ['text', 'lcov'],
       thresholds: {

@@ -2,7 +2,7 @@
 
 CPMK is a local-first toolkit for preserving useful project context across AI coding sessions, Git branches, and machines. It turns durable facts—decisions, conventions, current work, and handoff notes—into a small, inspectable memory store that tools such as Cursor can read and update.
 
-> Status: Milestone 2 CLI is implemented. Later milestones are not started.
+> Status: Milestone 3 CLI is implemented. Later milestones are not started.
 
 ## Why CPMK?
 
@@ -51,6 +51,8 @@ cpmk archive <id>
 cpmk context --budget 4000
 cpmk doctor
 cpmk migrate --dry-run
+cpmk status
+cpmk handoff "Pause here"
 ```
 
 `init` prints the created `.cpmk` path. `remember` prints the new entry ID. `list` prints `id  type  date  title` lines, or a JSON array with `--json`. `context` writes Markdown like:
@@ -61,6 +63,7 @@ cpmk migrate --dry-run
 ## Conventions
 
 ### API errors use RFC 9457 problem details
+
 API errors use RFC 9457 problem details
 
 Tags: `api`

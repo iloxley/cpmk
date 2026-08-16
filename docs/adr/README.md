@@ -9,3 +9,4 @@ Accepted Milestone 1 decisions:
 - [0003-ulid-generation.md](0003-ulid-generation.md)
 - [0004-atomic-writes.md](0004-atomic-writes.md)
 - [0005-memory-lifecycle.md](0005-memory-lifecycle.md)
+- [0006-git-cli.md](0006-git-cli.md)

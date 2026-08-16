@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.2.0';
+export const VERSION_SOURCE = '0.3.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -65,6 +65,21 @@ Write matching entries as a JSON array to stdout or a project file.
 
 Create a backup and confirm schema compatibility. Schema 1 is the only target in this release.
 `;
+    case 'status':
+      return `Usage: cpmk status
+
+Show project root and Git branch/commit/dirty state when Git is available.
+`;
+    case 'handoff':
+      return `Usage: cpmk handoff [summary]
+
+Create a handoff memory entry. Includes Git branch and commit when available.
+`;
+    case 'hook':
+      return `Usage: cpmk hook install|uninstall
+
+Opt-in Git hooks that remind you to write a handoff. Refuses to overwrite foreign hooks.
+`;
     default:
       return `CPMK — Cursor Project Memory Kit
 
@@ -84,6 +99,9 @@ Commands:
   context     Assemble a bounded Markdown context document
   doctor      Validate project state
   migrate     Backup project state and check schema version
+  status      Show Git branch, commit, and dirty state
+  handoff     Record a branch-aware handoff entry
+  hook        Install or remove opt-in Git reminder hooks
 
 Global options:
   --root <path>   Project directory (default: current working directory)

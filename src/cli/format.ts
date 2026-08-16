@@ -17,8 +17,15 @@ export function formatListJson(entries: readonly MemoryEntry[]): string {
 }
 
 export function formatDoctorHuman(result: DoctorResult): string {
-  if (result.ok) {
+  if (result.ok && result.diagnostics.length === 0) {
     return `CPMK doctor: pass\nRoot: ${result.data.root}\nEntries: ${result.data.entryCount}\n`;
+  }
+  if (result.ok) {
+    const lines = result.diagnostics.map(
+      (diagnostic) =>
+        `${diagnostic.severity} ${diagnostic.code} ${diagnostic.path}: ${diagnostic.message}`,
+    );
+    return `CPMK doctor: pass\nRoot: ${result.data.root}\nEntries: ${result.data.entryCount}\n${lines.join('\n')}\n`;
   }
   const lines = result.diagnostics.map(
     (diagnostic) =>

@@ -49,6 +49,9 @@ describe('command help', () => {
       'context',
       'doctor',
       'migrate',
+      'status',
+      'handoff',
+      'hook',
     ]) {
       expect(await run([command, '--help'], io)).toBe(0);
     }

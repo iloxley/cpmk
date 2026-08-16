@@ -52,7 +52,10 @@ export type ParsedCli =
       type?: string;
       tag?: string;
     }
-  | { kind: 'migrate'; root?: string; to?: number; dryRun: boolean };
+  | { kind: 'migrate'; root?: string; to?: number; dryRun: boolean }
+  | { kind: 'status'; root?: string }
+  | { kind: 'handoff'; root?: string; summary?: string }
+  | { kind: 'hook'; root?: string; action: 'install' | 'uninstall' };
 
 const COMMANDS = new Set([
   'init',
@@ -67,6 +70,9 @@ const COMMANDS = new Set([
   'import',
   'export',
   'migrate',
+  'status',
+  'handoff',
+  'hook',
   'help',
 ]);
 
@@ -342,6 +348,32 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         ...optionalRoot(root),
         ...(to === undefined ? {} : { to }),
       };
+    }
+    case 'status':
+      if (parsed.positionals.length > 0) {
+        throw usageError('status does not take positional arguments');
+      }
+      return { kind: 'status', ...optionalRoot(root) };
+    case 'handoff': {
+      const summary = parsed.positionals[0];
+      if (parsed.positionals.length > 1) {
+        throw usageError('handoff accepts an optional summary only');
+      }
+      return {
+        kind: 'handoff',
+        ...optionalRoot(root),
+        ...(summary === undefined ? {} : { summary }),
+      };
+    }
+    case 'hook': {
+      const action = parsed.positionals[0];
+      if (action !== 'install' && action !== 'uninstall') {
+        throw usageError('hook requires install or uninstall');
+      }
+      if (parsed.positionals.length !== 1) {
+        throw usageError('hook requires install or uninstall');
+      }
+      return { kind: 'hook', action, ...optionalRoot(root) };
     }
     default:
       throw usageError(`unknown command ${first}; see cpmk --help`);

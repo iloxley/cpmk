@@ -1,3 +1,6 @@
+export { createHandoff } from './application/handoff.js';
+export { installHooks, uninstallHooks } from './application/hook.js';
+export { readProjectStatus } from './application/status.js';
 export { archiveEntry } from './application/archive.js';
 export { buildContext } from './application/context.js';
 export { diagnoseProject } from './application/doctor.js';
