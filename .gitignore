@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.tgz
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.cpmk/generated/
+!.cpmk/generated/.gitkeep

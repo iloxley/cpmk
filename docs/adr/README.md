@@ -1,0 +1,10 @@
+# Architecture Decision Records
+
+Copy `templates/adr.md` to `docs/adr/NNNN-short-title.md`. ADRs are immutable after acceptance except for status and links; supersede them with a new ADR.
+
+Accepted Milestone 1 decisions:
+
+- [0001-esm-toolchain.md](0001-esm-toolchain.md)
+- [0002-schema-validator.md](0002-schema-validator.md)
+- [0003-ulid-generation.md](0003-ulid-generation.md)
+- [0004-atomic-writes.md](0004-atomic-writes.md)

@@ -1,0 +1,6 @@
+dist
+coverage
+node_modules
+sources
+*.tgz
+package-lock.json

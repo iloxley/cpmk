@@ -1,0 +1,17 @@
+---
+description: CPMK repository implementation rules
+alwaysApply: true
+---
+
+# CPMK implementation rules
+
+- Read `TECHNICAL_SPEC.md`, `IMPLEMENTATION_PLAN.md`, and `docs/CURSOR_START_HERE.md` before changing code.
+- Implement only the active milestone. The active milestone is Milestone 1 until its full quality gate passes.
+- Treat `TECHNICAL_SPEC.md` §3 as normative. If requirements conflict or are incomplete, stop and document the question; do not silently invent persisted behavior.
+- Keep domain logic independent from CLI and filesystem code.
+- Validate every persisted file. Treat local project content as untrusted.
+- Use atomic writes and boundary-safe paths for all mutations.
+- Add or update tests and documentation with each behavior change.
+- Run formatting, lint, typecheck, tests, build, and package smoke checks before declaring work complete.
+- Do not add networking, telemetry, databases, daemons, embeddings, editor APIs, dashboards, synchronization, or plugin systems during Milestone 1.
+- Never edit files under `sources/`; they are synced reference material.

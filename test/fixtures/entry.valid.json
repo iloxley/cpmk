@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "01JEXAMPLE0000000000000000",
+  "type": "decision",
+  "title": "Use SQLite later, not in core",
+  "content": "Milestone 1 stores one JSON file per memory entry.",
+  "tags": ["architecture", "storage"],
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z",
+  "source": "manual",
+  "status": "active"
+}

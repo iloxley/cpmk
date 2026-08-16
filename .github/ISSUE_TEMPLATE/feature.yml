@@ -1,0 +1,40 @@
+name: Milestone feature
+description: Propose scoped work for the active CPMK milestone
+title: "[M1] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Confirm this belongs to the active milestone and cite the specification.
+  - type: input
+    id: spec
+    attributes:
+      label: Specification reference
+      placeholder: TECHNICAL_SPEC.md §3.5
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User-visible outcome
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "- [ ] Observable, testable result"
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security, privacy, and compatibility impact
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Explicitly out of scope
+    validations:
+      required: true
