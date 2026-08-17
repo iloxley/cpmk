@@ -59,7 +59,13 @@ export type ParsedCli =
   | { kind: 'session-start'; root?: string; title?: string }
   | { kind: 'session-status'; root?: string; json: boolean }
   | { kind: 'session-end'; root?: string; summary?: string }
-  | { kind: 'session-resume'; root?: string; summary?: string };
+  | { kind: 'session-resume'; root?: string; summary?: string }
+  | {
+      kind: 'cursor-generate';
+      root?: string;
+      budget?: number;
+      output?: string;
+    };
 
 const COMMANDS = new Set([
   'init',
@@ -78,6 +84,7 @@ const COMMANDS = new Set([
   'handoff',
   'hook',
   'session',
+  'cursor',
   'help',
 ]);
 
@@ -416,6 +423,23 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         };
       }
       throw usageError('session requires start, status, end, or resume');
+    }
+    case 'cursor': {
+      const action = parsed.positionals[0];
+      if (action !== 'generate') {
+        throw usageError('cursor requires generate');
+      }
+      if (parsed.positionals.length !== 1) {
+        throw usageError('cursor generate does not take extra arguments');
+      }
+      const budget = parseBudget(parsed.values.budget);
+      const output = optionalString(parsed.values.output, '--output');
+      return {
+        kind: 'cursor-generate',
+        ...optionalRoot(root),
+        ...(budget === undefined ? {} : { budget }),
+        ...(output === undefined ? {} : { output }),
+      };
     }
     case 'hook': {
       const action = parsed.positionals[0];

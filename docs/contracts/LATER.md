@@ -4,12 +4,7 @@ These are boundaries, not implementation specs. Write a full contract like `M4_S
 
 ## M5 — Cursor integration
 
-- Consume M4 handoff + `cpmk context`. Do not invent a second memory store.
-- Generate Cursor-readable files only under `.cpmk/generated/` or another path the M5 contract names. Do not rewrite the user's `.cursor/rules` unless the user passes an explicit output path.
-- Keep domain and storage editor-agnostic. Cursor conventions live in an adapter.
-- Still no chat scrape. Session commands stay in the CLI.
-
-Open: which Cursor artifacts (rules vs project context vs both), and whether they are committed.
+Accepted contract: `M5_CURSOR.md`.
 
 ## M6 — Local dashboard
 

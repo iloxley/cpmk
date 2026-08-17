@@ -11,3 +11,4 @@ Accepted Milestone 1 decisions:
 - [0005-memory-lifecycle.md](0005-memory-lifecycle.md)
 - [0006-git-cli.md](0006-git-cli.md)
 - [0007-session-workflows.md](0007-session-workflows.md)
+- [0008-cursor-adapter.md](0008-cursor-adapter.md)

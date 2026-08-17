@@ -15,6 +15,7 @@ describe('helpText', () => {
     expect(helpText('show')).toContain('cpmk show');
     expect(helpText('migrate')).toContain('cpmk migrate');
     expect(helpText('session')).toContain('cpmk session start');
+    expect(helpText('cursor')).toContain('cpmk cursor generate');
   });
 });
 
@@ -54,6 +55,7 @@ describe('command help', () => {
       'handoff',
       'hook',
       'session',
+      'cursor',
     ]) {
       expect(await run([command, '--help'], io)).toBe(0);
     }

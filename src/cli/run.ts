@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { generateCursorArtifacts } from '../application/cursor.js';
 import {
   endSession,
   resumeSession,
@@ -282,6 +283,18 @@ export async function run(
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });
         io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'cursor-generate': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const result = await generateCursorArtifacts({
+          projectRoot: root,
+          ...(parsed.budget === undefined ? {} : { budget: parsed.budget }),
+          ...(parsed.output === undefined
+            ? {}
+            : { output: path.resolve(io.cwd(), parsed.output) }),
+        });
+        io.stdout(`${result.written.join('\n')}\n`);
         return 0;
       }
       case 'session-resume': {

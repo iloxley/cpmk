@@ -60,6 +60,13 @@ describe('parseCli', () => {
     expect(parseCli(['session', 'resume'])).toEqual({
       kind: 'session-resume',
     });
+    expect(
+      parseCli(['cursor', 'generate', '--budget', '4000', '--output', 'out']),
+    ).toEqual({
+      kind: 'cursor-generate',
+      budget: 4000,
+      output: 'out',
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
@@ -76,6 +83,7 @@ describe('parseCli', () => {
     expect(() => parseCli(['session', 'start', 'extra'])).toThrow(
       /session start does not take extra arguments/,
     );
+    expect(() => parseCli(['cursor'])).toThrow(/cursor requires generate/);
   });
 });
 
