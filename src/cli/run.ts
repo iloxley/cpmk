@@ -1,4 +1,10 @@
 import path from 'node:path';
+import {
+  endSession,
+  resumeSession,
+  sessionStatus,
+  startSession,
+} from '../application/session.js';
 import { createHandoff } from '../application/handoff.js';
 import { installHooks, uninstallHooks } from '../application/hook.js';
 import { readProjectStatus } from '../application/status.js';
@@ -22,6 +28,8 @@ import {
   formatDoctorJson,
   formatListHuman,
   formatListJson,
+  formatSessionStatusHuman,
+  formatSessionStatusJson,
   formatShowHuman,
   formatShowJson,
 } from './format.js';
@@ -242,6 +250,43 @@ export async function run(
       case 'handoff': {
         const root = await projectRoot(parsed.root, io.cwd());
         const entry = await createHandoff({
+          projectRoot: root,
+          ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
+        });
+        io.stdout(`${entry.id}\n`);
+        return 0;
+      }
+      case 'session-start': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await startSession({
+          projectRoot: root,
+          ...(parsed.title === undefined ? {} : { title: parsed.title }),
+        });
+        io.stdout(`${entry.id}\n`);
+        return 0;
+      }
+      case 'session-status': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const data = await sessionStatus({ projectRoot: root });
+        io.stdout(
+          parsed.json
+            ? formatSessionStatusJson(data)
+            : formatSessionStatusHuman(data),
+        );
+        return 0;
+      }
+      case 'session-end': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const result = await endSession({
+          projectRoot: root,
+          ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
+        });
+        io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'session-resume': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await resumeSession({
           projectRoot: root,
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });

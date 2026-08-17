@@ -10,3 +10,4 @@ Accepted Milestone 1 decisions:
 - [0004-atomic-writes.md](0004-atomic-writes.md)
 - [0005-memory-lifecycle.md](0005-memory-lifecycle.md)
 - [0006-git-cli.md](0006-git-cli.md)
+- [0007-session-workflows.md](0007-session-workflows.md)

@@ -2,7 +2,7 @@
 
 CPMK is a local-first toolkit for preserving useful project context across AI coding sessions, Git branches, and machines. It turns durable facts—decisions, conventions, current work, and handoff notes—into a small, inspectable memory store that tools such as Cursor can read and update.
 
-> Status: Milestone 3 CLI is implemented. Later milestones are not started.
+> Status: Milestone 4 CLI is implemented. Later milestones are not started.
 
 ## Why CPMK?
 
@@ -53,6 +53,10 @@ cpmk doctor
 cpmk migrate --dry-run
 cpmk status
 cpmk handoff "Pause here"
+cpmk session start --title "API work"
+cpmk session status
+cpmk session end "Pause here"
+cpmk session resume "Pick up the API work"
 ```
 
 `init` prints the created `.cpmk` path. `remember` prints the new entry ID. `list` prints `id  type  date  title` lines, or a JSON array with `--json`. `context` writes Markdown like:
@@ -69,11 +73,11 @@ API errors use RFC 9457 problem details
 Tags: `api`
 ```
 
-`doctor --json` uses `{ "ok": boolean, "data": ..., "diagnostics": [...] }`. Only the Milestone 1 commands above are implemented.
+`doctor --json` uses `{ "ok": boolean, "data": ..., "diagnostics": [...] }`. `session status --json` uses the same envelope. An open session is an active `task` tagged `session` and `session-open`. `session end` writes a `handoff` entry and `.cpmk/generated/handoff.md`.
 
 ## Programmatic API
 
-The package also exports `initProject`, `rememberEntry`, `listMemory`, `buildContext`, `diagnoseProject`, `selectEntries`, `renderContext`, and `discoverRoot`. Inject a clock and ID generator when you need deterministic tests.
+The package also exports `initProject`, `rememberEntry`, `listMemory`, `buildContext`, `diagnoseProject`, `startSession`, `sessionStatus`, `endSession`, `resumeSession`, `selectEntries`, `renderContext`, and `discoverRoot`. Inject a clock and ID generator when you need deterministic tests.
 
 ## Principles
 

@@ -1,3 +1,9 @@
+export {
+  endSession,
+  resumeSession,
+  sessionStatus,
+  startSession,
+} from './application/session.js';
 export { createHandoff } from './application/handoff.js';
 export { installHooks, uninstallHooks } from './application/hook.js';
 export { readProjectStatus } from './application/status.js';

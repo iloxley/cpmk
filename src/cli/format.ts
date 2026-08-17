@@ -1,3 +1,4 @@
+import type { SessionStatusData } from '../application/session.js';
 import type { DoctorResult, MemoryEntry } from '../domain/types.js';
 
 export function formatListHuman(entries: readonly MemoryEntry[]): string {
@@ -51,6 +52,25 @@ ${entry.content}
 
 export function formatShowJson(entry: MemoryEntry): string {
   return `${JSON.stringify(entry)}\n`;
+}
+
+function dirtyLabel(git: SessionStatusData['git']): string {
+  if (git === null) {
+    return 'n/a';
+  }
+  return git.dirty ? 'yes' : 'no';
+}
+
+export function formatSessionStatusHuman(data: SessionStatusData): string {
+  if (!data.open || data.id === null) {
+    return 'session: none\n';
+  }
+  const updated = (data.updatedAt ?? '').slice(0, 10);
+  return `session: ${data.id}\ntitle: ${data.title ?? ''}\nupdated: ${updated}\ntasks: ${data.activeTaskCount}\ndirty: ${dirtyLabel(data.git)}\n`;
+}
+
+export function formatSessionStatusJson(data: SessionStatusData): string {
+  return `${JSON.stringify({ ok: true, data, diagnostics: [] })}\n`;
 }
 
 export function formatDoctorJson(result: DoctorResult): string {

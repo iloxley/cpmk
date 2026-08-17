@@ -33,7 +33,15 @@ describe('diagnoseProject', () => {
       const result = await diagnoseProject({ projectRoot: directory });
       expect(result.ok).toBe(true);
       expect(result.data.entryCount).toBe(1);
-      expect(result.diagnostics).toEqual([]);
+      expect(result.diagnostics).toEqual([
+        {
+          severity: 'warning',
+          code: 'NO_SESSION',
+          path: '.cpmk/memory',
+          message:
+            'no open session; run cpmk session start when you begin work',
+        },
+      ]);
     });
   });
 

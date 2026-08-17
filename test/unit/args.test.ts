@@ -45,6 +45,21 @@ describe('parseCli', () => {
       kind: 'doctor',
       json: true,
     });
+    expect(parseCli(['session', 'start', '--title', 'API work'])).toEqual({
+      kind: 'session-start',
+      title: 'API work',
+    });
+    expect(parseCli(['session', 'status', '--json'])).toEqual({
+      kind: 'session-status',
+      json: true,
+    });
+    expect(parseCli(['session', 'end', 'Pause here'])).toEqual({
+      kind: 'session-end',
+      summary: 'Pause here',
+    });
+    expect(parseCli(['session', 'resume'])).toEqual({
+      kind: 'session-resume',
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
@@ -54,6 +69,12 @@ describe('parseCli', () => {
     expect(() => parseCli(['context', '--budget', 'nope'])).toThrow(/budget/);
     expect(() => parseCli(['list', '--tag', 'a', '--tag', 'b'])).toThrow(
       /single --tag/,
+    );
+    expect(() => parseCli(['session'])).toThrow(
+      /session requires start, status, end, or resume/,
+    );
+    expect(() => parseCli(['session', 'start', 'extra'])).toThrow(
+      /session start does not take extra arguments/,
     );
   });
 });

@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.3.0';
+export const VERSION_SOURCE = '0.4.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -80,6 +80,15 @@ Create a handoff memory entry. Includes Git branch and commit when available.
 
 Opt-in Git hooks that remind you to write a handoff. Refuses to overwrite foreign hooks.
 `;
+    case 'session':
+      return `Usage:
+  cpmk session start [--title <title>]
+  cpmk session status [--json]
+  cpmk session end [summary]
+  cpmk session resume [summary]
+
+Start, inspect, close, or resume a work session. Session state is a v1 task tagged session and session-open.
+`;
     default:
       return `CPMK — Cursor Project Memory Kit
 
@@ -102,6 +111,7 @@ Commands:
   status      Show Git branch, commit, and dirty state
   handoff     Record a branch-aware handoff entry
   hook        Install or remove opt-in Git reminder hooks
+  session     Start, status, end, or resume a work session
 
 Global options:
   --root <path>   Project directory (default: current working directory)

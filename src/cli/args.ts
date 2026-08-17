@@ -55,7 +55,11 @@ export type ParsedCli =
   | { kind: 'migrate'; root?: string; to?: number; dryRun: boolean }
   | { kind: 'status'; root?: string }
   | { kind: 'handoff'; root?: string; summary?: string }
-  | { kind: 'hook'; root?: string; action: 'install' | 'uninstall' };
+  | { kind: 'hook'; root?: string; action: 'install' | 'uninstall' }
+  | { kind: 'session-start'; root?: string; title?: string }
+  | { kind: 'session-status'; root?: string; json: boolean }
+  | { kind: 'session-end'; root?: string; summary?: string }
+  | { kind: 'session-resume'; root?: string; summary?: string };
 
 const COMMANDS = new Set([
   'init',
@@ -73,6 +77,7 @@ const COMMANDS = new Set([
   'status',
   'handoff',
   'hook',
+  'session',
   'help',
 ]);
 
@@ -364,6 +369,53 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         ...optionalRoot(root),
         ...(summary === undefined ? {} : { summary }),
       };
+    }
+    case 'session': {
+      const action = parsed.positionals[0];
+      if (action === 'start') {
+        if (parsed.positionals.length !== 1) {
+          throw usageError('session start does not take extra arguments');
+        }
+        const title = optionalString(parsed.values.title, '--title');
+        return {
+          kind: 'session-start',
+          ...optionalRoot(root),
+          ...(title === undefined ? {} : { title }),
+        };
+      }
+      if (action === 'status') {
+        if (parsed.positionals.length !== 1) {
+          throw usageError('session status does not take extra arguments');
+        }
+        return {
+          kind: 'session-status',
+          json: parsed.values.json === true,
+          ...optionalRoot(root),
+        };
+      }
+      if (action === 'end') {
+        if (parsed.positionals.length > 2) {
+          throw usageError('session end accepts an optional summary only');
+        }
+        const summary = parsed.positionals[1];
+        return {
+          kind: 'session-end',
+          ...optionalRoot(root),
+          ...(summary === undefined ? {} : { summary }),
+        };
+      }
+      if (action === 'resume') {
+        if (parsed.positionals.length > 2) {
+          throw usageError('session resume accepts an optional summary only');
+        }
+        const summary = parsed.positionals[1];
+        return {
+          kind: 'session-resume',
+          ...optionalRoot(root),
+          ...(summary === undefined ? {} : { summary }),
+        };
+      }
+      throw usageError('session requires start, status, end, or resume');
     }
     case 'hook': {
       const action = parsed.positionals[0];

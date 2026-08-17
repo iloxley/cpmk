@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { filenameForId } from '../domain/entry.js';
+import { isOpenSession } from '../domain/session.js';
 import {
   ID_PATTERN,
   type Diagnostic,
@@ -7,6 +8,7 @@ import {
   type MemoryEntry,
 } from '../domain/types.js';
 import { parseConfig, parseEntry } from '../domain/validate.js';
+import { readGitSnapshot } from '../git/status.js';
 import { nodeFs, pathExists, type FsOps } from '../storage/fs-ops.js';
 import {
   configPath,
@@ -16,7 +18,6 @@ import {
   memoryDir,
 } from '../storage/paths.js';
 import { assertSafeProjectLayout } from '../storage/root.js';
-import { readGitSnapshot } from '../git/status.js';
 
 const SKIP_MEMORY_FILES = new Set(['.gitkeep']);
 
@@ -47,6 +48,7 @@ export async function diagnoseProject(options: {
   const diagnostics: Diagnostic[] = [];
   const seenIds = new Map<string, string>();
   let entryCount = 0;
+  let openSession = false;
 
   try {
     await assertSafeProjectLayout(root, ops);
@@ -158,6 +160,9 @@ export async function diagnoseProject(options: {
       }
 
       entryCount += 1;
+      if (isOpenSession(entry)) {
+        openSession = true;
+      }
       if (entry.id !== idFromName) {
         addError(
           diagnostics,
@@ -178,6 +183,15 @@ export async function diagnoseProject(options: {
         seenIds.set(entry.id, relative);
       }
     }
+  }
+
+  if (!openSession) {
+    addWarning(
+      diagnostics,
+      'NO_SESSION',
+      '.cpmk/memory',
+      'no open session; run cpmk session start when you begin work',
+    );
   }
 
   const git = readGitSnapshot(root);

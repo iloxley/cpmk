@@ -173,6 +173,20 @@ describe('remaining core branches', () => {
     ).toContain('pass');
     expect(
       formatDoctorHuman({
+        ok: true,
+        data: { root: '/tmp', entryCount: 0, diagnosticCount: 1 },
+        diagnostics: [
+          {
+            severity: 'warning',
+            code: 'NO_SESSION',
+            path: '.cpmk/memory',
+            message: 'no open session',
+          },
+        ],
+      }),
+    ).toContain('warning NO_SESSION');
+    expect(
+      formatDoctorHuman({
         ok: false,
         data: { root: '/tmp', entryCount: 0, diagnosticCount: 1 },
         diagnostics: [

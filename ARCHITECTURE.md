@@ -47,4 +47,6 @@ Accepted decisions live in `docs/adr/` and use [the ADR template](templates/adr.
 
 ## Evolution
 
+Milestone 4 session state stays on schema v1: an open session is an active `task` tagged `session` and `session-open`. Generated `.cpmk/generated/handoff.md` is a view, like `context`.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.
