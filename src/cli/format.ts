@@ -1,4 +1,5 @@
 import type { SessionStatusData } from '../application/session.js';
+import type { SyncConflictFile, SyncReport } from '../application/sync.js';
 import type { DoctorResult, MemoryEntry } from '../domain/types.js';
 
 export function formatListHuman(entries: readonly MemoryEntry[]): string {
@@ -71,6 +72,22 @@ export function formatSessionStatusHuman(data: SessionStatusData): string {
 
 export function formatSessionStatusJson(data: SessionStatusData): string {
   return `${JSON.stringify({ ok: true, data, diagnostics: [] })}\n`;
+}
+
+export function formatSyncReportHuman(report: SyncReport): string {
+  return `add: ${report.addedCount}\nconflicts: ${report.conflictCount}\nunchanged: ${report.unchanged}\n`;
+}
+
+export function formatSyncReportJson(report: SyncReport): string {
+  return `${JSON.stringify({ ok: true, data: report, diagnostics: [] })}\n`;
+}
+
+export function formatSyncStatusHuman(file: SyncConflictFile): string {
+  return `conflicts: ${file.conflicts.length}\n`;
+}
+
+export function formatSyncStatusJson(file: SyncConflictFile): string {
+  return `${JSON.stringify({ ok: true, data: file, diagnostics: [] })}\n`;
 }
 
 export function formatDoctorJson(result: DoctorResult): string {

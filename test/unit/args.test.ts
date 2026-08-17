@@ -71,11 +71,29 @@ describe('parseCli', () => {
       kind: 'dashboard',
       port: 0,
     });
+    expect(parseCli(['sync', 'preview', '--from', '/tmp/other'])).toEqual({
+      kind: 'sync-preview',
+      json: false,
+      from: '/tmp/other',
+    });
+    expect(
+      parseCli([
+        'sync',
+        'resolve',
+        '01JEXAMPLE0000000000000000',
+        '--keep',
+        'local',
+      ]),
+    ).toEqual({
+      kind: 'sync-resolve',
+      id: '01JEXAMPLE0000000000000000',
+      keep: 'local',
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
     expect(() => parseCli([])).toThrow(/missing command/);
-    expect(() => parseCli(['sync'])).toThrow(/unknown command/);
+    expect(() => parseCli(['teleport'])).toThrow(/unknown command/);
     expect(() => parseCli(['remember'])).toThrow(/content/);
     expect(() => parseCli(['context', '--budget', 'nope'])).toThrow(/budget/);
     expect(() => parseCli(['list', '--tag', 'a', '--tag', 'b'])).toThrow(
@@ -90,6 +108,8 @@ describe('parseCli', () => {
     expect(() => parseCli(['cursor'])).toThrow(/cursor requires generate/);
     expect(() => parseCli(['dashboard', '--port', 'nope'])).toThrow(/port/);
     expect(() => parseCli(['dashboard', '--port', '70000'])).toThrow(/port/);
+    expect(() => parseCli(['sync'])).toThrow(/sync requires/);
+    expect(() => parseCli(['sync', 'apply'])).toThrow(/--from or --ref/);
   });
 });
 

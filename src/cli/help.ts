@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.6.0';
+export const VERSION_SOURCE = '0.7.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -99,6 +99,15 @@ Write Cursor-readable context and a project rule. Default output is .cpmk/genera
 
 Start a loopback-only browser UI on 127.0.0.1. Default port is 7435.
 `;
+    case 'sync':
+      return `Usage:
+  cpmk sync preview --from <path> | --ref <git-ref> [--json]
+  cpmk sync apply --from <path> | --ref <git-ref> [--json]
+  cpmk sync status [--json]
+  cpmk sync resolve <id> --keep local|incoming
+
+Merge memory from another project or Git ref. Divergent ids become generated conflicts.
+`;
     default:
       return `CPMK — Cursor Project Memory Kit
 
@@ -124,6 +133,7 @@ Commands:
   session     Start, status, end, or resume a work session
   cursor      Generate Cursor context and project rules
   dashboard   Open a loopback-only local memory UI
+  sync        Preview, apply, and resolve memory merges
 
 Global options:
   --root <path>   Project directory (default: current working directory)

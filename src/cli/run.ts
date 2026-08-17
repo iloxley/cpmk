@@ -2,6 +2,12 @@ import path from 'node:path';
 import { generateCursorArtifacts } from '../application/cursor.js';
 import { startDashboard } from '../application/dashboard.js';
 import {
+  applySync,
+  planSync,
+  readSyncStatus,
+  resolveSyncConflict,
+} from '../application/sync.js';
+import {
   endSession,
   resumeSession,
   sessionStatus,
@@ -32,6 +38,10 @@ import {
   formatListJson,
   formatSessionStatusHuman,
   formatSessionStatusJson,
+  formatSyncReportHuman,
+  formatSyncReportJson,
+  formatSyncStatusHuman,
+  formatSyncStatusJson,
   formatShowHuman,
   formatShowJson,
 } from './format.js';
@@ -284,6 +294,45 @@ export async function run(
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });
         io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'sync-preview':
+      case 'sync-apply': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const report = await (
+          parsed.kind === 'sync-preview' ? planSync : applySync
+        )({
+          projectRoot: root,
+          ...(parsed.from === undefined
+            ? {}
+            : { from: path.resolve(io.cwd(), parsed.from) }),
+          ...(parsed.ref === undefined ? {} : { ref: parsed.ref }),
+        });
+        io.stdout(
+          parsed.json
+            ? formatSyncReportJson(report)
+            : formatSyncReportHuman(report),
+        );
+        return 0;
+      }
+      case 'sync-status': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const file = await readSyncStatus({ projectRoot: root });
+        io.stdout(
+          parsed.json
+            ? formatSyncStatusJson(file)
+            : formatSyncStatusHuman(file),
+        );
+        return 0;
+      }
+      case 'sync-resolve': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const entry = await resolveSyncConflict({
+          projectRoot: root,
+          id: parsed.id,
+          keep: parsed.keep,
+        });
+        io.stdout(`${entry.id}\n`);
         return 0;
       }
       case 'dashboard': {

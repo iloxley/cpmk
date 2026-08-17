@@ -25,6 +25,8 @@ Validate all persisted data, constrain writes to the project root, reject unsafe
 
 Do not store passwords, tokens, private keys, personal data, or confidential chat transcripts in CPMK. Review `.cpmk/` before committing it. Extend `privacy.denyGlobs` for project-specific sensitive paths. Secret scanning remains recommended even though CPMK itself does not provide it in Milestone 1.
 
+If memory is synchronized through Git, treat the remote as a copy of project data. Use a private remote, disk encryption, and Git-level encryption tools when the repository is not already trusted. CPMK does not ship a keystore; `cpmk sync` only merges local files.
+
 ## Supported versions
 
 Before 1.0, only the newest published pre-release is supported. This policy should be reviewed for the 1.0 release.

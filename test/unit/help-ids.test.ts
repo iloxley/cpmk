@@ -17,6 +17,7 @@ describe('helpText', () => {
     expect(helpText('session')).toContain('cpmk session start');
     expect(helpText('cursor')).toContain('cpmk cursor generate');
     expect(helpText('dashboard')).toContain('cpmk dashboard');
+    expect(helpText('sync')).toContain('cpmk sync preview');
   });
 });
 
@@ -58,6 +59,7 @@ describe('command help', () => {
       'session',
       'cursor',
       'dashboard',
+      'sync',
     ]) {
       expect(await run([command, '--help'], io)).toBe(0);
     }

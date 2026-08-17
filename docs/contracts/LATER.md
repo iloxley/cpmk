@@ -12,13 +12,7 @@ Accepted contract: `M6_DASHBOARD.md`.
 
 ## M7 — Multi-machine sync
 
-- Transport interface first; Git transport is the first adapter.
-- Do not parse Git internals. Reuse the M3 CLI approach for metadata.
-- Deterministic merge of v1 entries; conflicts presented, not silently smashed.
-- Offline must still allow `remember` / `session` / `context`.
-- Encryption guidance is documentation plus optional local keying; no mandatory hosted service.
-
-Open: conflict document schema (this will need an explicit persisted-contract ADR).
+Accepted contract: `M7_SYNC.md`.
 
 ## M8 — Semantic memory
 

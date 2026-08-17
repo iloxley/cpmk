@@ -66,7 +66,21 @@ export type ParsedCli =
       budget?: number;
       output?: string;
     }
-  | { kind: 'dashboard'; root?: string; port: number };
+  | { kind: 'dashboard'; root?: string; port: number }
+  | {
+      kind: 'sync-preview' | 'sync-apply';
+      root?: string;
+      from?: string;
+      ref?: string;
+      json: boolean;
+    }
+  | { kind: 'sync-status'; root?: string; json: boolean }
+  | {
+      kind: 'sync-resolve';
+      root?: string;
+      id: string;
+      keep: 'local' | 'incoming';
+    };
 
 const COMMANDS = new Set([
   'init',
@@ -87,6 +101,7 @@ const COMMANDS = new Set([
   'session',
   'cursor',
   'dashboard',
+  'sync',
   'help',
 ]);
 
@@ -148,6 +163,9 @@ function parseCommandArgs(command: string, args: string[]) {
         to: { type: 'string' },
         'dry-run': { type: 'boolean' },
         port: { type: 'string' },
+        from: { type: 'string' },
+        ref: { type: 'string' },
+        keep: { type: 'string' },
       },
     });
   } catch (error) {
@@ -440,6 +458,50 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         };
       }
       throw usageError('session requires start, status, end, or resume');
+    }
+    case 'sync': {
+      const action = parsed.positionals[0];
+      if (action === 'status') {
+        if (parsed.positionals.length !== 1) {
+          throw usageError('sync status does not take extra arguments');
+        }
+        return {
+          kind: 'sync-status',
+          json: parsed.values.json === true,
+          ...optionalRoot(root),
+        };
+      }
+      if (action === 'resolve') {
+        const id = parsed.positionals[1];
+        if (id === undefined || parsed.positionals.length !== 2) {
+          throw usageError('sync resolve requires a single <id>');
+        }
+        const keep = optionalString(parsed.values.keep, '--keep');
+        if (keep !== 'local' && keep !== 'incoming') {
+          throw usageError('sync resolve requires --keep local or incoming');
+        }
+        return { kind: 'sync-resolve', id, keep, ...optionalRoot(root) };
+      }
+      if (action === 'preview' || action === 'apply') {
+        if (parsed.positionals.length !== 1) {
+          throw usageError(`sync ${action} does not take extra arguments`);
+        }
+        const from = optionalString(parsed.values.from, '--from');
+        const ref = optionalString(parsed.values.ref, '--ref');
+        if ((from === undefined) === (ref === undefined)) {
+          throw usageError(
+            `sync ${action} requires exactly one of --from or --ref`,
+          );
+        }
+        return {
+          kind: action === 'preview' ? 'sync-preview' : 'sync-apply',
+          json: parsed.values.json === true,
+          ...optionalRoot(root),
+          ...(from === undefined ? {} : { from }),
+          ...(ref === undefined ? {} : { ref }),
+        };
+      }
+      throw usageError('sync requires preview, apply, status, or resolve');
     }
     case 'dashboard': {
       if (parsed.positionals.length > 0) {

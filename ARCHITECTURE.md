@@ -53,4 +53,6 @@ Milestone 5 treats Cursor as an output adapter. Default artifacts live in `.cpmk
 
 Milestone 6 is a loopback HTTP adapter over the same application services. It does not introduce a database.
 
+Milestone 7 merges v1 entries by id. Git transport uses the Git CLI; conflicts are generated JSON, not a schema change.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.

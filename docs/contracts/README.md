@@ -10,7 +10,8 @@ Normative runtime behavior remains `TECHNICAL_SPEC.md` §3 until an accepted ADR
 | M4 Sessions | [M4_SESSIONS.md](M4_SESSIONS.md), [ADR 0007](../adr/0007-session-workflows.md) | Accepted |
 | M5 Cursor | [M5_CURSOR.md](M5_CURSOR.md), [ADR 0008](../adr/0008-cursor-adapter.md) | Accepted |
 | M6 Dashboard | [M6_DASHBOARD.md](M6_DASHBOARD.md), [ADR 0009](../adr/0009-local-dashboard.md) | Accepted |
-| M7–M10 | [LATER.md](LATER.md) | Sketch only |
+| M7 Sync | [M7_SYNC.md](M7_SYNC.md), [ADR 0010](../adr/0010-sync-merge.md) | Accepted |
+| M8–M10 | [LATER.md](LATER.md) | Sketch only |
 
 A proposed contract becomes implementable when:
 

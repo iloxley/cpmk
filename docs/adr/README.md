@@ -13,3 +13,4 @@ Accepted Milestone 1 decisions:
 - [0007-session-workflows.md](0007-session-workflows.md)
 - [0008-cursor-adapter.md](0008-cursor-adapter.md)
 - [0009-local-dashboard.md](0009-local-dashboard.md)
+- [0010-sync-merge.md](0010-sync-merge.md)
