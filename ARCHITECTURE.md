@@ -57,4 +57,6 @@ Milestone 7 merges v1 entries by id. Git transport uses the Git CLI; conflicts a
 
 Milestone 8 search is lexical ranking after list filters. Embeddings are not required.
 
+Milestone 9 plugins are manifest-only JSON under `.cpmk/plugins`. They cannot execute code.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.

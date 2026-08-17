@@ -28,6 +28,10 @@ export function generatedDir(root: string): string {
   return path.join(root, '.cpmk', 'generated');
 }
 
+export function pluginsDir(root: string): string {
+  return path.join(root, '.cpmk', 'plugins');
+}
+
 export function configPath(root: string): string {
   return path.join(root, '.cpmk', 'config.json');
 }

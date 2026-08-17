@@ -1,4 +1,6 @@
-export const VERSION_SOURCE = '0.8.0';
+import { CLI_VERSION } from '../domain/version.js';
+
+export const VERSION_SOURCE = CLI_VERSION;
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -99,6 +101,14 @@ Write Cursor-readable context and a project rule. Default output is .cpmk/genera
 
 Start a loopback-only browser UI on 127.0.0.1. Default port is 7435.
 `;
+    case 'plugin':
+      return `Usage:
+  cpmk plugin list [--json]
+  cpmk plugin install <path>
+  cpmk plugin uninstall <name>
+
+Install manifest-only plugins under .cpmk/plugins. Core commands work with none installed.
+`;
     case 'search':
       return `Usage: cpmk search <query> [--type <type>] [--tag <tag>] [--status <status>] [--json]
 
@@ -140,6 +150,7 @@ Commands:
   dashboard   Open a loopback-only local memory UI
   sync        Preview, apply, and resolve memory merges
   search      Lexical search over memory entries
+  plugin      List, install, or remove manifest plugins
 
 Global options:
   --root <path>   Project directory (default: current working directory)

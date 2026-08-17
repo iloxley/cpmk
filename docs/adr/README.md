@@ -15,3 +15,4 @@ Accepted Milestone 1 decisions:
 - [0009-local-dashboard.md](0009-local-dashboard.md)
 - [0010-sync-merge.md](0010-sync-merge.md)
 - [0011-lexical-search.md](0011-lexical-search.md)
+- [0012-manifest-plugins.md](0012-manifest-plugins.md)

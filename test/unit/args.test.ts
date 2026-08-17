@@ -95,6 +95,10 @@ describe('parseCli', () => {
       type: 'convention',
       json: false,
     });
+    expect(parseCli(['plugin', 'list', '--json'])).toEqual({
+      kind: 'plugin-list',
+      json: true,
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
@@ -117,6 +121,7 @@ describe('parseCli', () => {
     expect(() => parseCli(['sync'])).toThrow(/sync requires/);
     expect(() => parseCli(['sync', 'apply'])).toThrow(/--from or --ref/);
     expect(() => parseCli(['search'])).toThrow(/query/);
+    expect(() => parseCli(['plugin'])).toThrow(/plugin requires/);
   });
 });
 

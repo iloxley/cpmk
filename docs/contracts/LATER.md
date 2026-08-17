@@ -20,12 +20,7 @@ Accepted contract: `M8_SEARCH.md`.
 
 ## M9 — Plugins
 
-- Manifest + declared permissions. Plugins receive only what they declare.
-- No implicit filesystem or Git access.
-- Core commands must work with zero plugins installed.
-- Compatibility policy tied to `schemaVersion` and CLI major version.
-
-Open: process isolation vs in-process load, and the permission vocabulary.
+Accepted contract: `M9_PLUGINS.md`.
 
 ## M10 — 1.0 release
 

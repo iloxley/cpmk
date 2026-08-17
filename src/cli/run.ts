@@ -1,6 +1,11 @@
 import path from 'node:path';
 import { generateCursorArtifacts } from '../application/cursor.js';
 import { startDashboard } from '../application/dashboard.js';
+import {
+  installPlugin,
+  listPlugins,
+  uninstallPlugin,
+} from '../application/plugin.js';
 import { searchMemory } from '../application/search.js';
 import {
   applySync,
@@ -297,6 +302,42 @@ export async function run(
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });
         io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'plugin-list': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const plugins = await listPlugins({ projectRoot: root });
+        for (const plugin of plugins) {
+          if (!plugin.valid) {
+            io.stderr(`invalid plugin ${plugin.name}\n`);
+          }
+        }
+        const valid = plugins.filter((plugin) => plugin.valid);
+        io.stdout(
+          parsed.json
+            ? `${JSON.stringify({ ok: true, data: plugins, diagnostics: [] })}\n`
+            : valid.length === 0
+              ? ''
+              : `${valid.map((plugin) => `${plugin.name}  ${plugin.version}`).join('\n')}\n`,
+        );
+        return 0;
+      }
+      case 'plugin-install': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const manifest = await installPlugin({
+          projectRoot: root,
+          sourcePath: path.resolve(io.cwd(), parsed.sourcePath),
+        });
+        io.stdout(`${manifest.name}\n`);
+        return 0;
+      }
+      case 'plugin-uninstall': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const removed = await uninstallPlugin({
+          projectRoot: root,
+          name: parsed.name,
+        });
+        io.stdout(`${removed}\n`);
         return 0;
       }
       case 'search': {

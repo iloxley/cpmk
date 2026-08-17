@@ -89,7 +89,10 @@ export type ParsedCli =
       tag?: string;
       status?: string;
       json: boolean;
-    };
+    }
+  | { kind: 'plugin-list'; root?: string; json: boolean }
+  | { kind: 'plugin-install'; root?: string; sourcePath: string }
+  | { kind: 'plugin-uninstall'; root?: string; name: string };
 
 const COMMANDS = new Set([
   'init',
@@ -112,6 +115,7 @@ const COMMANDS = new Set([
   'dashboard',
   'sync',
   'search',
+  'plugin',
   'help',
 ]);
 
@@ -468,6 +472,38 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         };
       }
       throw usageError('session requires start, status, end, or resume');
+    }
+    case 'plugin': {
+      const action = parsed.positionals[0];
+      if (action === 'list') {
+        if (parsed.positionals.length !== 1) {
+          throw usageError('plugin list does not take extra arguments');
+        }
+        return {
+          kind: 'plugin-list',
+          json: parsed.values.json === true,
+          ...optionalRoot(root),
+        };
+      }
+      if (action === 'install') {
+        const sourcePath = parsed.positionals[1];
+        if (sourcePath === undefined || parsed.positionals.length !== 2) {
+          throw usageError('plugin install requires a single <path>');
+        }
+        return {
+          kind: 'plugin-install',
+          sourcePath,
+          ...optionalRoot(root),
+        };
+      }
+      if (action === 'uninstall') {
+        const name = parsed.positionals[1];
+        if (name === undefined || parsed.positionals.length !== 2) {
+          throw usageError('plugin uninstall requires a single <name>');
+        }
+        return { kind: 'plugin-uninstall', name, ...optionalRoot(root) };
+      }
+      throw usageError('plugin requires list, install, or uninstall');
     }
     case 'search': {
       const query = parsed.positionals[0];

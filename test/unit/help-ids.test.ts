@@ -19,6 +19,7 @@ describe('helpText', () => {
     expect(helpText('dashboard')).toContain('cpmk dashboard');
     expect(helpText('sync')).toContain('cpmk sync preview');
     expect(helpText('search')).toContain('cpmk search');
+    expect(helpText('plugin')).toContain('cpmk plugin list');
   });
 });
 
@@ -62,6 +63,7 @@ describe('command help', () => {
       'dashboard',
       'sync',
       'search',
+      'plugin',
     ]) {
       expect(await run([command, '--help'], io)).toBe(0);
     }

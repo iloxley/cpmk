@@ -12,7 +12,8 @@ Normative runtime behavior remains `TECHNICAL_SPEC.md` §3 until an accepted ADR
 | M6 Dashboard | [M6_DASHBOARD.md](M6_DASHBOARD.md), [ADR 0009](../adr/0009-local-dashboard.md) | Accepted |
 | M7 Sync | [M7_SYNC.md](M7_SYNC.md), [ADR 0010](../adr/0010-sync-merge.md) | Accepted |
 | M8 Search | [M8_SEARCH.md](M8_SEARCH.md), [ADR 0011](../adr/0011-lexical-search.md) | Accepted |
-| M9–M10 | [LATER.md](LATER.md) | Sketch only |
+| M9 Plugins | [M9_PLUGINS.md](M9_PLUGINS.md), [ADR 0012](../adr/0012-manifest-plugins.md) | Accepted |
+| M10 Release | [LATER.md](LATER.md) | Sketch only |
 
 A proposed contract becomes implementable when:
 

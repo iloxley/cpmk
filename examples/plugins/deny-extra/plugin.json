@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "name": "deny-extra",
+  "version": "1.0.0",
+  "engines": { "cpmk": ">=0.9.0" },
+  "permissions": ["doctor.contribute"],
+  "doctor": {
+    "warnings": [
+      {
+        "code": "PLUGIN_HINT",
+        "path": ".cpmk",
+        "message": "review deny globs before import"
+      }
+    ]
+  }
+}

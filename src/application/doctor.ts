@@ -1,6 +1,9 @@
 import path from 'node:path';
 import { filenameForId } from '../domain/entry.js';
+import { pluginDoctorDiagnostics } from '../domain/plugin.js';
 import { isOpenSession } from '../domain/session.js';
+import { CLI_VERSION } from '../domain/version.js';
+import { loadValidPlugins } from './plugin.js';
 import {
   ID_PATTERN,
   type Diagnostic,
@@ -192,6 +195,11 @@ export async function diagnoseProject(options: {
       '.cpmk/memory',
       'no open session; run cpmk session start when you begin work',
     );
+  }
+
+  const plugins = await loadValidPlugins({ projectRoot: root, fs: ops });
+  for (const manifest of plugins) {
+    diagnostics.push(...pluginDoctorDiagnostics(manifest, CLI_VERSION));
   }
 
   const git = readGitSnapshot(root);
