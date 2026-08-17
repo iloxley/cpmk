@@ -89,6 +89,12 @@ describe('parseCli', () => {
       id: '01JEXAMPLE0000000000000000',
       keep: 'local',
     });
+    expect(parseCli(['search', 'rfc', '--type', 'convention'])).toEqual({
+      kind: 'search',
+      query: 'rfc',
+      type: 'convention',
+      json: false,
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
@@ -110,6 +116,7 @@ describe('parseCli', () => {
     expect(() => parseCli(['dashboard', '--port', '70000'])).toThrow(/port/);
     expect(() => parseCli(['sync'])).toThrow(/sync requires/);
     expect(() => parseCli(['sync', 'apply'])).toThrow(/--from or --ref/);
+    expect(() => parseCli(['search'])).toThrow(/query/);
   });
 });
 

@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.7.0';
+export const VERSION_SOURCE = '0.8.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -99,6 +99,11 @@ Write Cursor-readable context and a project rule. Default output is .cpmk/genera
 
 Start a loopback-only browser UI on 127.0.0.1. Default port is 7435.
 `;
+    case 'search':
+      return `Usage: cpmk search <query> [--type <type>] [--tag <tag>] [--status <status>] [--json]
+
+Rank memories with lexical search after the same filters as list. No embeddings or network.
+`;
     case 'sync':
       return `Usage:
   cpmk sync preview --from <path> | --ref <git-ref> [--json]
@@ -134,6 +139,7 @@ Commands:
   cursor      Generate Cursor context and project rules
   dashboard   Open a loopback-only local memory UI
   sync        Preview, apply, and resolve memory merges
+  search      Lexical search over memory entries
 
 Global options:
   --root <path>   Project directory (default: current working directory)

@@ -80,6 +80,15 @@ export type ParsedCli =
       root?: string;
       id: string;
       keep: 'local' | 'incoming';
+    }
+  | {
+      kind: 'search';
+      root?: string;
+      query: string;
+      type?: string;
+      tag?: string;
+      status?: string;
+      json: boolean;
     };
 
 const COMMANDS = new Set([
@@ -102,6 +111,7 @@ const COMMANDS = new Set([
   'cursor',
   'dashboard',
   'sync',
+  'search',
   'help',
 ]);
 
@@ -458,6 +468,28 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         };
       }
       throw usageError('session requires start, status, end, or resume');
+    }
+    case 'search': {
+      const query = parsed.positionals[0];
+      if (query === undefined || parsed.positionals.length !== 1) {
+        throw usageError('search requires a single <query> argument');
+      }
+      const tags = parsed.values.tag ?? [];
+      if (tags.length > 1) {
+        throw usageError('search accepts a single --tag filter');
+      }
+      const type = optionalString(parsed.values.type, '--type');
+      const tag = optionalString(tags[0], '--tag');
+      const status = optionalString(parsed.values.status, '--status');
+      return {
+        kind: 'search',
+        query,
+        json: parsed.values.json === true,
+        ...optionalRoot(root),
+        ...(type === undefined ? {} : { type }),
+        ...(tag === undefined ? {} : { tag }),
+        ...(status === undefined ? {} : { status }),
+      };
     }
     case 'sync': {
       const action = parsed.positionals[0];

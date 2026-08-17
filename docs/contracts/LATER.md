@@ -16,12 +16,7 @@ Accepted contract: `M7_SYNC.md`.
 
 ## M8 — Semantic memory
 
-- Deterministic filters (type, tag, status, budget) run before any ranking.
-- Embeddings are optional adapters. The product works with them disabled.
-- No default network calls. Any model/runtime is user-configured and out of process.
-- Indexes are disposable caches, not the source of truth.
-
-Open: on-disk index format and whether it lives under `.cpmk/generated/`.
+Accepted contract: `M8_SEARCH.md`.
 
 ## M9 — Plugins
 

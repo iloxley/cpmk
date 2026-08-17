@@ -14,3 +14,4 @@ Accepted Milestone 1 decisions:
 - [0008-cursor-adapter.md](0008-cursor-adapter.md)
 - [0009-local-dashboard.md](0009-local-dashboard.md)
 - [0010-sync-merge.md](0010-sync-merge.md)
+- [0011-lexical-search.md](0011-lexical-search.md)

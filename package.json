@@ -1,6 +1,6 @@
 {
   "name": "cpmk",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Local-first project memory and bounded context for AI coding tools",
   "license": "MIT",
   "type": "module",

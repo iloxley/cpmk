@@ -1,3 +1,4 @@
+import type { ScoredEntry } from '../domain/search.js';
 import type { SessionStatusData } from '../application/session.js';
 import type { SyncConflictFile, SyncReport } from '../application/sync.js';
 import type { DoctorResult, MemoryEntry } from '../domain/types.js';
@@ -84,6 +85,29 @@ export function formatSyncReportJson(report: SyncReport): string {
 
 export function formatSyncStatusHuman(file: SyncConflictFile): string {
   return `conflicts: ${file.conflicts.length}\n`;
+}
+
+export function formatSearchHuman(results: readonly ScoredEntry[]): string {
+  if (results.length === 0) {
+    return '';
+  }
+  return `${results
+    .map(
+      (item) =>
+        `${item.entry.id}  ${item.entry.type}  ${item.score}  ${item.entry.title}`,
+    )
+    .join('\n')}\n`;
+}
+
+export function formatSearchJson(
+  query: string,
+  results: readonly ScoredEntry[],
+): string {
+  return `${JSON.stringify({
+    ok: true,
+    data: { query, results },
+    diagnostics: [],
+  })}\n`;
 }
 
 export function formatSyncStatusJson(file: SyncConflictFile): string {

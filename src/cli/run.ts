@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { generateCursorArtifacts } from '../application/cursor.js';
 import { startDashboard } from '../application/dashboard.js';
+import { searchMemory } from '../application/search.js';
 import {
   applySync,
   planSync,
@@ -36,6 +37,8 @@ import {
   formatDoctorJson,
   formatListHuman,
   formatListJson,
+  formatSearchHuman,
+  formatSearchJson,
   formatSessionStatusHuman,
   formatSessionStatusJson,
   formatSyncReportHuman,
@@ -294,6 +297,22 @@ export async function run(
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });
         io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'search': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const results = await searchMemory({
+          projectRoot: root,
+          query: parsed.query,
+          ...(parsed.type === undefined ? {} : { type: parsed.type }),
+          ...(parsed.tag === undefined ? {} : { tag: parsed.tag }),
+          ...(parsed.status === undefined ? {} : { status: parsed.status }),
+        });
+        io.stdout(
+          parsed.json
+            ? formatSearchJson(parsed.query, results)
+            : formatSearchHuman(results),
+        );
         return 0;
       }
       case 'sync-preview':

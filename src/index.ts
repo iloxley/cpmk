@@ -6,6 +6,7 @@ export {
 } from './application/session.js';
 export { generateCursorArtifacts } from './application/cursor.js';
 export { startDashboard } from './application/dashboard.js';
+export { searchMemory } from './application/search.js';
 export {
   applySync,
   planSync,
