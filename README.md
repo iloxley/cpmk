@@ -2,7 +2,7 @@
 
 CPMK is a local-first toolkit for preserving useful project context across AI coding sessions, Git branches, and machines. It turns durable facts—decisions, conventions, current work, and handoff notes—into a small, inspectable memory store that tools such as Cursor can read and update.
 
-> Status: Milestone 9 CLI is implemented. Later milestones are not started.
+> Status: 1.0. Later product work should start from a new accepted contract.
 
 ## Why CPMK?
 
@@ -38,6 +38,9 @@ npm run check
 - [Security and privacy](docs/SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Issue backlog](docs/MILESTONE_ISSUES.md)
+- [Support policy](docs/SUPPORT.md)
+- [Threat model](docs/THREAT_MODEL.md)
+- [Release](docs/RELEASE.md)
 - [Repository structure](docs/REPOSITORY_STRUCTURE.md)
 
 ## Intended CLI

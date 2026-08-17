@@ -24,7 +24,4 @@ Accepted contract: `M9_PLUGINS.md`.
 
 ## M10 — 1.0 release
 
-- Threat model, performance, accessibility (if M6 shipped), signed/provenance release, migration tests, support policy.
-- Before 1.0, only the newest pre-release is supported (`docs/SECURITY.md`). M10 must replace that sentence.
-
-Open: LTS window and whether generated files are part of the supported surface.
+Accepted contract: `M10_RELEASE.md`.

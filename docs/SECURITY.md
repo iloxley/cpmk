@@ -29,4 +29,4 @@ If memory is synchronized through Git, treat the remote as a copy of project dat
 
 ## Supported versions
 
-Before 1.0, only the newest published pre-release is supported. This policy should be reviewed for the 1.0 release.
+The current 1.x release is supported. Pre-1.0 tags are unsupported. See `docs/SUPPORT.md`.

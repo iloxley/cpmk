@@ -16,3 +16,4 @@ Accepted Milestone 1 decisions:
 - [0010-sync-merge.md](0010-sync-merge.md)
 - [0011-lexical-search.md](0011-lexical-search.md)
 - [0012-manifest-plugins.md](0012-manifest-plugins.md)
+- [0013-1.0-support.md](0013-1.0-support.md)

@@ -59,4 +59,6 @@ Milestone 8 search is lexical ranking after list filters. Embeddings are not req
 
 Milestone 9 plugins are manifest-only JSON under `.cpmk/plugins`. They cannot execute code.
 
+1.0 support and the generated-file boundary are recorded in ADR 0013.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.
