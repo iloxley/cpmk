@@ -9,7 +9,8 @@ Normative runtime behavior remains `TECHNICAL_SPEC.md` §3 until an accepted ADR
 | M3 Git | `docs/adr/0006-git-cli.md` | Accepted |
 | M4 Sessions | [M4_SESSIONS.md](M4_SESSIONS.md), [ADR 0007](../adr/0007-session-workflows.md) | Accepted |
 | M5 Cursor | [M5_CURSOR.md](M5_CURSOR.md), [ADR 0008](../adr/0008-cursor-adapter.md) | Accepted |
-| M6–M10 | [LATER.md](LATER.md) | Sketch only |
+| M6 Dashboard | [M6_DASHBOARD.md](M6_DASHBOARD.md), [ADR 0009](../adr/0009-local-dashboard.md) | Accepted |
+| M7–M10 | [LATER.md](LATER.md) | Sketch only |
 
 A proposed contract becomes implementable when:
 

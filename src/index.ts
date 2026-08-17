@@ -5,6 +5,7 @@ export {
   startSession,
 } from './application/session.js';
 export { generateCursorArtifacts } from './application/cursor.js';
+export { startDashboard } from './application/dashboard.js';
 export { createHandoff } from './application/handoff.js';
 export { installHooks, uninstallHooks } from './application/hook.js';
 export { readProjectStatus } from './application/status.js';

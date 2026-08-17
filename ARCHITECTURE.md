@@ -51,4 +51,6 @@ Milestone 4 session state stays on schema v1: an open session is an active `task
 
 Milestone 5 treats Cursor as an output adapter. Default artifacts live in `.cpmk/generated/cursor/`; the domain does not depend on editor APIs.
 
+Milestone 6 is a loopback HTTP adapter over the same application services. It does not introduce a database.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.

@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { generateCursorArtifacts } from '../application/cursor.js';
+import { startDashboard } from '../application/dashboard.js';
 import {
   endSession,
   resumeSession,
@@ -283,6 +284,24 @@ export async function run(
           ...(parsed.summary === undefined ? {} : { summary: parsed.summary }),
         });
         io.stdout(`${result.handoff.id}\n`);
+        return 0;
+      }
+      case 'dashboard': {
+        const root = await projectRoot(parsed.root, io.cwd());
+        const server = await startDashboard({
+          projectRoot: root,
+          port: parsed.port,
+        });
+        io.stdout(`${server.url}\n`);
+        await new Promise<void>((resolve) => {
+          const stop = () => {
+            void server.close().finally(() => {
+              resolve();
+            });
+          };
+          process.once('SIGINT', stop);
+          process.once('SIGTERM', stop);
+        });
         return 0;
       }
       case 'cursor-generate': {

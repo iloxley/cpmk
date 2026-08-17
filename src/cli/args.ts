@@ -65,7 +65,8 @@ export type ParsedCli =
       root?: string;
       budget?: number;
       output?: string;
-    };
+    }
+  | { kind: 'dashboard'; root?: string; port: number };
 
 const COMMANDS = new Set([
   'init',
@@ -85,6 +86,7 @@ const COMMANDS = new Set([
   'hook',
   'session',
   'cursor',
+  'dashboard',
   'help',
 ]);
 
@@ -111,6 +113,20 @@ function parseBudget(value: string | undefined): number | undefined {
   return Number.parseInt(value, 10);
 }
 
+function parsePort(value: string | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!/^[0-9]+$/u.test(value)) {
+    throw usageError('port must be an integer between 0 and 65535');
+  }
+  const port = Number.parseInt(value, 10);
+  if (port > 65535) {
+    throw usageError('port must be an integer between 0 and 65535');
+  }
+  return port;
+}
+
 function parseCommandArgs(command: string, args: string[]) {
   try {
     return parseArgs({
@@ -131,6 +147,7 @@ function parseCommandArgs(command: string, args: string[]) {
         content: { type: 'string' },
         to: { type: 'string' },
         'dry-run': { type: 'boolean' },
+        port: { type: 'string' },
       },
     });
   } catch (error) {
@@ -423,6 +440,16 @@ export function parseCli(argv: readonly string[]): ParsedCli {
         };
       }
       throw usageError('session requires start, status, end, or resume');
+    }
+    case 'dashboard': {
+      if (parsed.positionals.length > 0) {
+        throw usageError('dashboard does not take positional arguments');
+      }
+      return {
+        kind: 'dashboard',
+        port: parsePort(parsed.values.port) ?? 7435,
+        ...optionalRoot(root),
+      };
     }
     case 'cursor': {
       const action = parsed.positionals[0];

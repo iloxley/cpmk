@@ -1,4 +1,4 @@
-export const VERSION_SOURCE = '0.5.0';
+export const VERSION_SOURCE = '0.6.0';
 
 export function helpText(topic?: string): string {
   switch (topic) {
@@ -94,6 +94,11 @@ Start, inspect, close, or resume a work session. Session state is a v1 task tagg
 
 Write Cursor-readable context and a project rule. Default output is .cpmk/generated/cursor/.
 `;
+    case 'dashboard':
+      return `Usage: cpmk dashboard [--port <n>]
+
+Start a loopback-only browser UI on 127.0.0.1. Default port is 7435.
+`;
     default:
       return `CPMK — Cursor Project Memory Kit
 
@@ -118,6 +123,7 @@ Commands:
   hook        Install or remove opt-in Git reminder hooks
   session     Start, status, end, or resume a work session
   cursor      Generate Cursor context and project rules
+  dashboard   Open a loopback-only local memory UI
 
 Global options:
   --root <path>   Project directory (default: current working directory)

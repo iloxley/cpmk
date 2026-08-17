@@ -67,6 +67,10 @@ describe('parseCli', () => {
       budget: 4000,
       output: 'out',
     });
+    expect(parseCli(['dashboard', '--port', '0'])).toEqual({
+      kind: 'dashboard',
+      port: 0,
+    });
   });
 
   it('rejects unknown commands and invalid usage', () => {
@@ -84,6 +88,8 @@ describe('parseCli', () => {
       /session start does not take extra arguments/,
     );
     expect(() => parseCli(['cursor'])).toThrow(/cursor requires generate/);
+    expect(() => parseCli(['dashboard', '--port', 'nope'])).toThrow(/port/);
+    expect(() => parseCli(['dashboard', '--port', '70000'])).toThrow(/port/);
   });
 });
 

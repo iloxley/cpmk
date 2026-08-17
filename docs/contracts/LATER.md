@@ -8,12 +8,7 @@ Accepted contract: `M5_CURSOR.md`.
 
 ## M6 — Local dashboard
 
-- Loopback only. No LAN bind by default.
-- CLI and `.cpmk` files remain authoritative. The UI is a client of the same application services.
-- Mutations require an explicit local action. No background writers.
-- Still no database and no telemetry.
-
-Open: bind address, CSRF/auth story for a local browser, and whether the UI is shipped inside the CLI package.
+Accepted contract: `M6_DASHBOARD.md`.
 
 ## M7 — Multi-machine sync
 
