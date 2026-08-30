@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cpmk/cpmk/main/schemas/config.schema.json",
+  "schemaVersion": 1,
+  "project": {
+    "name": "CPMK"
+  },
+  "context": {
+    "defaultBudget": 12000
+  },
+  "privacy": {
+    "denyGlobs": [
+      "**/.env*",
+      "**/*secret*",
+      "**/*credential*"
+    ]
+  }
+}

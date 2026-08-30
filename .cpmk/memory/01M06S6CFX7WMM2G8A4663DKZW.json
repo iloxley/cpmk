@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6CFX7WMM2G8A4663DKZW",
+  "type": "decision",
+  "title": "Schema version 1 rejects unknown properties. Do not invent persisted fields; enc",
+  "content": "Schema version 1 rejects unknown properties. Do not invent persisted fields; encode new behavior with existing type, tags, status, and content.",
+  "tags": [
+    "schema"
+  ],
+  "createdAt": "2026-08-17T02:35:45.532Z",
+  "updatedAt": "2026-08-17T02:35:45.532Z",
+  "source": "manual",
+  "status": "active"
+}

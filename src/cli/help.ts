@@ -100,6 +100,7 @@ Write Cursor-readable context and a project rule. Default output is .cpmk/genera
       return `Usage: cpmk dashboard [--port <n>]
 
 Start a loopback-only browser UI on 127.0.0.1. Default port is 7435.
+Pages: Memory (/), Guide (/guide), Demo (/demo).
 `;
     case 'plugin':
       return `Usage:

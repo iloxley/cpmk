@@ -1,6 +1,6 @@
 # Basic CPMK Example
 
-This folder documents the expected Milestone 1 experience. After the CLI exists:
+For the full desktop-and-Git story, use [docs/USER_GUIDE.md](../../docs/USER_GUIDE.md) and [docs/DEMO_WALKTHROUGH.md](../../docs/DEMO_WALKTHROUGH.md). This folder still documents the Milestone 1 happy path:
 
 ```bash
 cpmk init --name basic-project

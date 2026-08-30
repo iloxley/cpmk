@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6CRKC1972T5EZBDWZHK0",
+  "type": "warning",
+  "title": "Never edit, rename, or delete files under sources/. They are synced reference ma",
+  "content": "Never edit, rename, or delete files under sources/. They are synced reference material.",
+  "tags": [
+    "sources"
+  ],
+  "createdAt": "2026-08-17T02:35:45.811Z",
+  "updatedAt": "2026-08-17T02:35:45.811Z",
+  "source": "manual",
+  "status": "active"
+}

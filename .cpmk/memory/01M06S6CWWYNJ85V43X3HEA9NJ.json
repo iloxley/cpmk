@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6CWWYNJ85V43X3HEA9NJ",
+  "type": "warning",
+  "title": "Do not store secrets, tokens, or chat transcripts in .cpmk memory.",
+  "content": "Do not store secrets, tokens, or chat transcripts in .cpmk memory.",
+  "tags": [
+    "privacy"
+  ],
+  "createdAt": "2026-08-17T02:35:45.948Z",
+  "updatedAt": "2026-08-17T02:35:45.948Z",
+  "source": "manual",
+  "status": "active"
+}

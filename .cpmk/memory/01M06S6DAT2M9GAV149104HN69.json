@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6DAT2M9GAV149104HN69",
+  "type": "task",
+  "title": "Explore the 1.0 CLI",
+  "content": "Explore the 1.0 CLI\nBranch: main\nCommit: 49df402caa289ae80e0f9beddb44831bf2055393\nDirty: yes",
+  "tags": [
+    "session",
+    "session-open"
+  ],
+  "createdAt": "2026-08-17T02:35:46.393Z",
+  "updatedAt": "2026-08-17T02:35:46.393Z",
+  "source": "manual",
+  "status": "active"
+}

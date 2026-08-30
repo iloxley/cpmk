@@ -25,3 +25,11 @@ Accepted contract: `M9_PLUGINS.md`.
 ## M10 — 1.0 release
 
 Accepted contract: `M10_RELEASE.md`.
+
+## M11 — In-app user guide and demos
+
+Accepted contract: `M11_IN_APP_DOCS.md`.
+
+## M12 — Desktop shell
+
+Sketch only: `M12_DESKTOP.md`. Do not implement until a full contract is accepted.

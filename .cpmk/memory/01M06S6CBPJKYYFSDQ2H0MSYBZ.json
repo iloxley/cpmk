@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6CBPJKYYFSDQ2H0MSYBZ",
+  "type": "convention",
+  "title": "Node 22+, TypeScript ESM, npm, and Vitest. Domain logic stays independent from C",
+  "content": "Node 22+, TypeScript ESM, npm, and Vitest. Domain logic stays independent from CLI and filesystem code.",
+  "tags": [
+    "toolchain"
+  ],
+  "createdAt": "2026-08-17T02:35:45.397Z",
+  "updatedAt": "2026-08-17T02:35:45.397Z",
+  "source": "manual",
+  "status": "active"
+}

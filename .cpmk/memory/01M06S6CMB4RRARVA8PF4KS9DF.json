@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6CMB4RRARVA8PF4KS9DF",
+  "type": "decision",
+  "title": "An open session is an active task tagged session and session-open. Close with se",
+  "content": "An open session is an active task tagged session and session-open. Close with session end; cpmk handoff does not close a session.",
+  "tags": [
+    "session"
+  ],
+  "createdAt": "2026-08-17T02:35:45.674Z",
+  "updatedAt": "2026-08-17T02:35:45.674Z",
+  "source": "manual",
+  "status": "active"
+}

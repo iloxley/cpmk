@@ -14,6 +14,8 @@ Normative runtime behavior remains `TECHNICAL_SPEC.md` §3 until an accepted ADR
 | M8 Search | [M8_SEARCH.md](M8_SEARCH.md), [ADR 0011](../adr/0011-lexical-search.md) | Accepted |
 | M9 Plugins | [M9_PLUGINS.md](M9_PLUGINS.md), [ADR 0012](../adr/0012-manifest-plugins.md) | Accepted |
 | M10 Release | [M10_RELEASE.md](M10_RELEASE.md), [ADR 0013](../adr/0013-1.0-support.md) | Accepted |
+| M11 In-app docs | [M11_IN_APP_DOCS.md](M11_IN_APP_DOCS.md), [ADR 0014](../adr/0014-in-app-docs.md) | Accepted |
+| M12 Desktop shell | [M12_DESKTOP.md](M12_DESKTOP.md) | Sketch — do not implement |
 
 A proposed contract becomes implementable when:
 

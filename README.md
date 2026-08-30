@@ -16,7 +16,7 @@ AI coding sessions are temporary, while software projects are not. Important con
 
 ## Scope and non-goals
 
-The first release is a command-line tool and file format. It does not scrape private chats, silently modify source code, or require vector databases or cloud accounts. Cursor integration, semantic retrieval, dashboards, and plugins arrive only after the core is proven.
+The 1.0 release is a command-line tool, a file format, and a loopback local app (`cpmk dashboard`) that includes the user guide and demos. It does not scrape private chats, silently modify source code, or require vector databases or cloud accounts.
 
 ## Quick start for contributors
 
@@ -31,6 +31,8 @@ npm run check
 
 ## Documentation map
 
+- [User guide](docs/USER_GUIDE.md) — desktop and Git workflows, with walkthroughs
+- [Demo walkthroughs](docs/DEMO_WALKTHROUGH.md) — scripted local and two-machine demos
 - [Technical specification](TECHNICAL_SPEC.md) — behavior, data contracts, and acceptance criteria
 - [Implementation plan](IMPLEMENTATION_PLAN.md) — incremental milestones and quality gates
 - [Architecture](ARCHITECTURE.md) — components, boundaries, and decision records

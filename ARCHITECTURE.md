@@ -61,4 +61,6 @@ Milestone 9 plugins are manifest-only JSON under `.cpmk/plugins`. They cannot ex
 
 1.0 support and the generated-file boundary are recorded in ADR 0013.
 
+Milestone 11 serves the operator guide and demos from the same loopback adapter (`/guide`, `/demo`). A desktop window is sketched in `docs/contracts/M12_DESKTOP.md` and is not accepted.
+
 Use ports/adapters when a second real implementation appears, not pre-emptively. For example, extract a sync transport interface when Git sync is implemented, and a retrieval interface when semantic retrieval is implemented. File schemas evolve independently from internal TypeScript types through explicit mapping and migrations.

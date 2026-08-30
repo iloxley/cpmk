@@ -31,7 +31,20 @@ describe('startDashboard', () => {
       try {
         const page = await fetch(server.url);
         expect(page.status).toBe(200);
-        expect(await page.text()).toContain('CPMK dashboard');
+        const home = await page.text();
+        expect(home).toContain('CPMK dashboard');
+        expect(home).toContain('href="/guide"');
+        expect(home).toContain('href="/demo"');
+
+        const guide = await fetch(`${server.url}guide`);
+        expect(guide.status).toBe(200);
+        expect(await guide.text()).toContain('CPMK user guide');
+
+        const demo = await fetch(`${server.url}demo`);
+        expect(demo.status).toBe(200);
+        const demoHtml = await demo.text();
+        expect(demoHtml).toContain('CPMK demo walkthroughs');
+        expect(demoHtml).toContain('Live project');
 
         const health = await json(`${server.url}api/health`);
         expect(health).toEqual({ status: 200, body: { ok: true } });

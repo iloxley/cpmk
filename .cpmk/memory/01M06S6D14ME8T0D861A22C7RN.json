@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6D14ME8T0D861A22C7RN",
+  "type": "fact",
+  "title": "Generated files under .cpmk/generated are disposable views. Memory JSON and conf",
+  "content": "Generated files under .cpmk/generated are disposable views. Memory JSON and config.json are the source of truth.",
+  "tags": [
+    "storage"
+  ],
+  "createdAt": "2026-08-17T02:35:46.083Z",
+  "updatedAt": "2026-08-17T02:35:46.083Z",
+  "source": "manual",
+  "status": "active"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "01M06S6D5MQYH85MCHXHY2QB46",
+  "type": "task",
+  "title": "Open the local dashboard, add a note, then run session end when you are done loo",
+  "content": "Open the local dashboard, add a note, then run session end when you are done looking around.",
+  "tags": [
+    "demo"
+  ],
+  "createdAt": "2026-08-17T02:35:46.227Z",
+  "updatedAt": "2026-08-17T02:35:46.227Z",
+  "source": "manual",
+  "status": "active"
+}

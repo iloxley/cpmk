@@ -20,6 +20,8 @@
   },
   "files": [
     "dist",
+    "docs/USER_GUIDE.md",
+    "docs/DEMO_WALKTHROUGH.md",
     "schemas",
     "LICENSE",
     "README.md"
@@ -33,6 +35,8 @@
     "test:coverage": "vitest run --coverage",
     "build": "tsc -p tsconfig.build.json",
     "pack:smoke": "node scripts/pack-smoke.mjs",
+    "cpmk": "node dist/cli.js",
+    "demo": "node dist/cli.js dashboard",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm run test:coverage && npm run pack:smoke"
   },
   "repository": {

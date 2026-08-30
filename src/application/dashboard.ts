@@ -7,6 +7,11 @@ import {
 } from 'node:http';
 import { CpmkError } from '../domain/errors.js';
 import { archiveEntry } from './archive.js';
+import {
+  loadPackagedDoc,
+  renderMarkdownDocument,
+  type PackagedDoc,
+} from './guide-html.js';
 import { listMemory } from './list.js';
 import { rememberEntry } from './remember.js';
 import { sessionStatus } from './session.js';
@@ -104,26 +109,162 @@ async function readBody(request: IncomingMessage): Promise<string> {
   return body;
 }
 
-function renderPage(token: string): string {
+const DASHBOARD_STYLES = `
+    :root { color-scheme: light; --bg: #f4f1ea; --ink: #1c1917; --muted: #57534e; --line: #d6d3d1; --card: #fff; --accent: #1d4ed8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.45; }
+    .shell { display: grid; grid-template-columns: 13rem minmax(0, 1fr); min-height: 100vh; }
+    nav { padding: 1.25rem 1rem; border-right: 1px solid var(--line); background: var(--card); }
+    nav p { margin: 0 0 1rem; font-weight: 650; }
+    nav a { display: block; padding: 0.4rem 0.55rem; color: inherit; text-decoration: none; border-radius: 0.35rem; }
+    nav a[aria-current="page"] { background: #e0e7ff; color: var(--accent); }
+    main { padding: 1.5rem 2rem 3rem; max-width: 54rem; }
+    label { display: block; margin: 0.5rem 0 0.25rem; }
+    input, select, textarea, button { font: inherit; }
+    textarea { width: 100%; min-height: 5rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.5rem 0.4rem 0; border-bottom: 1px solid var(--line); }
+    .status { margin: 0.75rem 0; color: var(--muted); }
+    .guide pre { overflow: auto; background: #1c1917; color: #f5f5f4; padding: 0.9rem 1rem; border-radius: 0.4rem; }
+    .guide code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+    .guide :not(pre) > code { background: #e7e5e4; padding: 0.1rem 0.3rem; border-radius: 0.25rem; }
+    .guide table { background: var(--card); }
+    .live { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+    @media (max-width: 40rem) {
+      .shell { grid-template-columns: 1fr; }
+      nav { border-right: 0; border-bottom: 1px solid var(--line); }
+      nav a { display: inline-block; }
+    }
+`;
+
+type DashboardPage = 'memory' | 'guide' | 'demo';
+
+function renderNav(current: DashboardPage): string {
+  const link = (page: DashboardPage, href: string, label: string): string => {
+    const currentAttr = page === current ? ' aria-current="page"' : '';
+    return `<a href="${href}"${currentAttr}>${label}</a>`;
+  };
+  return `<nav aria-label="Dashboard">
+    <p>CPMK</p>
+    ${link('memory', '/', 'Memory')}
+    ${link('guide', '/guide', 'Guide')}
+    ${link('demo', '/demo', 'Demo')}
+  </nav>`;
+}
+
+function renderShell(options: {
+  title: string;
+  current: DashboardPage;
+  body: string;
+  script?: string;
+}): string {
+  const script =
+    options.script === undefined ? '' : `<script>${options.script}</script>`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CPMK dashboard</title>
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 1.5rem; line-height: 1.4; }
-    main { max-width: 52rem; }
-    label { display: block; margin: 0.5rem 0 0.25rem; }
-    input, select, textarea, button { font: inherit; }
-    textarea { width: 100%; min-height: 5rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.5rem 0.4rem 0; border-bottom: 1px solid #ccc; }
-    .status { margin: 0.75rem 0; }
-  </style>
+  <title>${options.title}</title>
+  <style>${DASHBOARD_STYLES}</style>
 </head>
 <body>
-  <main>
+  <div class="shell">
+    ${renderNav(options.current)}
+    ${options.body}
+  </div>
+  ${script}
+</body>
+</html>
+`;
+}
+
+function memoryScript(token: string): string {
+  return `
+    const token = ${JSON.stringify(token)};
+    async function api(path, options = {}) {
+      const headers = Object.assign({ 'X-CPMK-Token': token }, options.headers || {});
+      const response = await fetch(path, Object.assign({}, options, { headers }));
+      return response.json();
+    }
+    async function refresh() {
+      const filters = document.getElementById('filters');
+      const query = new URLSearchParams();
+      if (filters) {
+        const data = new FormData(filters);
+        for (const [key, value] of data.entries()) {
+          if (String(value).trim()) query.set(key, String(value).trim());
+        }
+      }
+      const session = await api('/api/session');
+      const sessionEl = document.getElementById('session');
+      if (sessionEl) {
+        sessionEl.textContent = session.data && session.data.open
+          ? 'Open session: ' + session.data.id
+          : 'session: none';
+      }
+      const listed = await api('/api/entries?' + query.toString());
+      const rows = document.getElementById('rows');
+      if (!rows) return;
+      rows.replaceChildren();
+      for (const entry of listed.data || []) {
+        const tr = document.createElement('tr');
+        for (const value of [entry.id, entry.type, entry.title]) {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.appendChild(td);
+        }
+        const action = document.createElement('td');
+        if (entry.status === 'active' && document.getElementById('remember')) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'Archive';
+          button.addEventListener('click', async () => {
+            await api('/api/archive', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ id: entry.id }),
+            });
+            await refresh();
+          });
+          action.appendChild(button);
+        }
+        tr.appendChild(action);
+        rows.appendChild(tr);
+      }
+    }
+    const filters = document.getElementById('filters');
+    if (filters) {
+      filters.addEventListener('submit', (event) => {
+        event.preventDefault();
+        refresh();
+      });
+    }
+    const remember = document.getElementById('remember');
+    if (remember) {
+      remember.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const content = document.getElementById('content').value;
+        const type = document.getElementById('remember-type').value;
+        await api('/api/remember', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ content, type }),
+        });
+        document.getElementById('content').value = '';
+        await refresh();
+      });
+    }
+    refresh();
+`;
+}
+
+function renderPage(token: string): string {
+  return renderShell({
+    title: 'CPMK dashboard',
+    current: 'memory',
+    script: memoryScript(token),
+    body: `<main>
     <h1>CPMK dashboard</h1>
     <p class="status" id="session">Loading session…</p>
     <form id="filters" aria-label="Filter memories">
@@ -147,75 +288,75 @@ function renderPage(token: string): string {
       <thead><tr><th>ID</th><th>Type</th><th>Title</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
-  </main>
-  <script>
-    const token = ${JSON.stringify(token)};
-    async function api(path, options = {}) {
-      const headers = Object.assign({ 'X-CPMK-Token': token }, options.headers || {});
-      const response = await fetch(path, Object.assign({}, options, { headers }));
-      return response.json();
-    }
-    async function refresh() {
-      const filters = new FormData(document.getElementById('filters'));
-      const query = new URLSearchParams();
-      for (const [key, value] of filters.entries()) {
-        if (String(value).trim()) query.set(key, String(value).trim());
-      }
-      const session = await api('/api/session');
-      const sessionEl = document.getElementById('session');
-      sessionEl.textContent = session.data && session.data.open
-        ? 'Open session: ' + session.data.id
-        : 'session: none';
-      const listed = await api('/api/entries?' + query.toString());
-      const rows = document.getElementById('rows');
-      rows.replaceChildren();
-      for (const entry of listed.data || []) {
-        const tr = document.createElement('tr');
-        for (const value of [entry.id, entry.type, entry.title]) {
-          const td = document.createElement('td');
-          td.textContent = value;
-          tr.appendChild(td);
-        }
-        const action = document.createElement('td');
-        if (entry.status === 'active') {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.textContent = 'Archive';
-          button.addEventListener('click', async () => {
-            await api('/api/archive', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({ id: entry.id }),
-            });
-            await refresh();
-          });
-          action.appendChild(button);
-        }
-        tr.appendChild(action);
-        rows.appendChild(tr);
-      }
-    }
-    document.getElementById('filters').addEventListener('submit', (event) => {
-      event.preventDefault();
-      refresh();
-    });
-    document.getElementById('remember').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const content = document.getElementById('content').value;
-      const type = document.getElementById('remember-type').value;
-      await api('/api/remember', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ content, type }),
-      });
-      document.getElementById('content').value = '';
-      await refresh();
-    });
-    refresh();
-  </script>
-</body>
-</html>
-`;
+  </main>`,
+  });
+}
+
+function renderDocPage(options: {
+  title: string;
+  current: 'guide' | 'demo';
+  markdown: string;
+  token?: string;
+}): string {
+  const live =
+    options.current === 'demo'
+      ? `<section class="live" aria-label="Live project">
+    <h2>Live project</h2>
+    <p class="status" id="session">Loading session…</p>
+    <table>
+      <caption>Active memories in this folder</caption>
+      <thead><tr><th>ID</th><th>Type</th><th>Title</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>`
+      : '';
+  return renderShell({
+    title: options.title,
+    current: options.current,
+    ...(options.token === undefined
+      ? {}
+      : { script: memoryScript(options.token) }),
+    body: `<main>
+    <article class="guide">${renderMarkdownDocument(options.markdown)}</article>
+    ${live}
+  </main>`,
+  });
+}
+
+function renderDocError(message: string): string {
+  return renderShell({
+    title: 'CPMK dashboard',
+    current: 'guide',
+    body: `<main><h1>Guide unavailable</h1><p>${message}</p></main>`,
+  });
+}
+
+async function sendPackagedDoc(
+  response: ServerResponse,
+  doc: PackagedDoc,
+  token: string,
+): Promise<void> {
+  try {
+    const markdown = await loadPackagedDoc(doc);
+    sendText(
+      response,
+      200,
+      renderDocPage({
+        title: doc === 'guide' ? 'CPMK user guide' : 'CPMK demos',
+        current: doc,
+        markdown,
+        ...(doc === 'demo' ? { token } : {}),
+      }),
+      'text/html; charset=utf-8',
+    );
+  } catch {
+    sendText(
+      response,
+      500,
+      renderDocError('Packaged documentation is missing from this install.'),
+      'text/html; charset=utf-8',
+    );
+  }
 }
 
 export async function handleDashboardRequest(options: {
@@ -233,6 +374,14 @@ export async function handleDashboardRequest(options: {
   const url = new URL(request.url ?? '/', 'http://127.0.0.1');
   if (request.method === 'GET' && url.pathname === '/') {
     sendText(response, 200, renderPage(token), 'text/html; charset=utf-8');
+    return;
+  }
+  if (request.method === 'GET' && url.pathname === '/guide') {
+    await sendPackagedDoc(response, 'guide', token);
+    return;
+  }
+  if (request.method === 'GET' && url.pathname === '/demo') {
+    await sendPackagedDoc(response, 'demo', token);
     return;
   }
   if (request.method === 'GET' && url.pathname === '/api/health') {
